@@ -1,0 +1,267 @@
+$primary = #467BE3
+$primaryHover = #225bce
+
+$secondary = #dce8fa
+$secondaryHover = #c6ddfa
+
+$warning = #f9f4ec
+$warningHover = #eee1cb
+
+$danger = #f3e6eb
+$dangerColor = #F5222D
+$dangerHover = #f5d1d6
+
+.primary {
+  color: #467BE3
+}
+.primary-bg {
+  background-color: $primary;
+}
+
+.like-btn {
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn {
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 5px 14px;
+  margin-right: 7px;
+  letter-spacing: -0.2px;
+  & > i {
+    margin-left: -5px;
+  }
+  & > i + span {
+    margin-left: 7px;
+  }
+  &_flat {
+    border: none;
+  }
+  &_full {
+    width: 100%;
+  }
+  &_inline {
+    margin-top: -0.55rem;
+  }
+  &_flat:first-of-type {
+    margin-left: -0.7rem;
+  }
+  &-sm,
+  &-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+
+.btn-primary {
+  color: #fff;
+  background-color: $primary;
+  border-color: transparent;
+  &:focus,
+  &.focus {
+    box-shadow: none;
+    background-color: $primary;
+    border-color: transparent;
+  }
+  &:hover {
+    color: #fff;
+    background-color: $primaryHover;
+    border-color: transparent;
+    &:focus,
+    &.focus {
+      color: #fff;
+      background-color: $primaryHover;
+    }
+  }
+  &.disabled,
+  &:disabled {
+    color: #fff;
+    background-color: $primary;
+    border-color: transparent;
+  }
+  &:not(:disabled):not(.disabled):active {
+    box-shadow: 0 0 0 0.1rem rgba(65, 143, 224, 0.5)
+  }
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    color: #fff;
+    background-color: $primary;
+  }
+}
+
+.btn-outline-primary,
+.btn-primary.btn_flat {
+  color: $primary;
+  background-color: transparent;
+  &:focus,
+  &.focus {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  &:hover {
+    color: $primary;
+    background-color: $secondary;
+    &:focus,
+    &.focus {
+      color: $primary;
+      background-color: $secondary;
+    }
+  }
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    color: $primary;
+    box-shadow: 0 0 0 0.1rem rgba(208, 231, 255, 0.5);
+    background-color: $secondaryHover;
+  }
+}
+
+.btn-secondary {
+  color: $primary;
+  background-color: $secondary;
+  border-color: transparent !important;
+  &:focus,
+  &.focus {
+    color: $primary;
+    box-shadow: none;
+    background-color: $secondary;
+    border-color: transparent;
+  }
+  &:hover {
+    color: $primary;
+    background-color: $secondaryHover;
+    border-color: transparent;
+    &:focus,
+    &.focus {
+      color: $primary;
+      background-color: $secondaryHover;
+    }
+  }
+  &.disabled,
+  &:disabled {
+    color: $primary;
+    background-color: $secondary;
+    border-color: transparent;
+  }
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    box-shadow: 0 0 0 0.1rem rgba(24, 160, 251, 0.42)
+    color: $primary;
+    background-color: $secondary;
+  }
+  &:not(:disabled):not(.disabled):active:focus,
+  &:not(:disabled):not(.disabled).active:focus {
+    box-shadow: 0 0 0 0.1rem rgba(24, 160, 251, 0.42)
+  }
+}
+.btn-outline-secondary,
+.btn-secondary.btn_flat {
+  color: $primary;
+  background-color: transparent;
+  &:focus,
+  &.focus {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  &:hover {
+    color: $primary;
+    background-color: $secondary;
+    &:focus,
+    &.focus {
+      color: $primary;
+      background-color: $secondary;
+    }
+  }
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    color: $primary;
+    box-shadow: 0 0 0 0.1rem rgba(24, 160, 251, 0.42)
+    background-color: $secondaryHover;
+  }
+}
+
+.btn-danger {
+  color: $dangerColor;
+  background-color: $danger;
+  border-color: transparent;
+  &:focus,
+  &.focus {
+    color: $dangerColor;
+    box-shadow: none;
+    background-color: $danger;
+    border-color: transparent;
+  }
+  &:hover {
+    color: $dangerColor;
+    background-color: $dangerHover;
+    border-color: transparent;
+    &:focus,
+    &.focus {
+      color: $dangerColor;
+      background-color: $dangerHover;
+    }
+  }
+  &.disabled,
+  &:disabled {
+    color: $dangerColor;
+    background-color: $danger;
+    border-color: transparent;
+  }
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    box-shadow: 0 0 0 0.1rem rgba(255, 95, 103, 0.44);
+    color: $dangerColor;
+    background-color: $dangerHover;
+    border-color: transparent;
+  }
+  &:not(:disabled):not(.disabled):active:focus,
+  &:not(:disabled):not(.disabled).active:focus {
+    box-shadow: 0 0 0 0.1rem rgba(255, 95, 103, 0.44);
+  }
+  &.btn_flat {
+    color: $dangerColor;
+    background-color: transparent;
+    &:focus,
+    &.focus {
+      box-shadow: none;
+      background-color: transparent;
+    }
+    &:hover {
+      color: $dangerColor;
+      background-color: $danger;
+      &:focus,
+      &.focus {
+        color: $dangerColor;
+        background-color: $danger;
+      }
+    }
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+      color: $dangerColor;
+      box-shadow: 0 0 0 0.1rem rgba(255, 95, 103, 0.44)
+      background-color: $dangerHover;
+    }
+  }
+}
+
+
+
+
+
+.btn-group {
+  & .btn-danger,
+  & .btn-secondary,
+  & .btn-primary {
+    border-right-color: #f1f4fa;
+    border-left-color: #f1f4fa;
+  }
+  & .btn-primary {
+    &:last-child { border-right-color: $primary; }
+    &:first-child { border-left-color: $primary; }
+  }
+}
+.btn-group > .btn:hover, .btn-group-vertical > .btn:hover {
+  z-index: 0;
+}
+.btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active, .btn-group-vertical > .btn:focus, .btn-group-vertical > .btn:active, .btn-group-vertical > .btn.active {
+  z-index: 0;
+}
