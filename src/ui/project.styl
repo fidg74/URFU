@@ -1,0 +1,141 @@
+.project {
+  &__visible {
+    background-color: rgba(70, 123, 227, 0.08);
+    padding: 0.01rem 2.25rem 0.75rem;
+    margin: 0 -2.25rem;
+    border-radius: 4px;
+  }
+  &__user-text {
+    word-break: break-word;
+    white-space: pre-wrap;
+    & p {
+      line-height: inherit;
+      margin-bottom: 0.5rem;
+    }
+    & li p {
+      margin-bottom: 0rem;
+    }
+  }
+  &__send-message {
+    padding: 2rem 2.5rem;
+    flex: 1 1 auto;
+    min-height: 1px;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    background: #fff6da;
+  }
+  &__block {
+    margin-bottom: 0.5rem;
+    &:before {
+      content: '';
+      height: 0;
+      width: 100%;
+      position: relative;
+      display: block;
+      box-sizing: content-box;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      margin: 1.5rem -2.5rem;
+      padding: 0 2.5rem;
+    }
+    &:first-of-type:before {
+      display: none;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__course {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    margin-right: 0.25rem;
+    border-radius: 6px;
+    color: rgba(114, 128, 142, 0.3);
+    &_active {
+      color: #467BE3;
+      background-color: rgba(57, 146, 255, 0.12);
+    }
+  }
+  &__remove {
+    position: relative;
+    padding-right: 4rem;
+    & .btn-close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      &_top {
+        top: 1.7rem;
+      }
+    }
+  }
+}
+
+.project-status {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  &__wrap {
+    margin-bottom: 2.5rem;
+  }
+  &__num {
+    flex: 0 0 27px;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    border: 1px solid rgba(114, 128, 142, 0.3);
+    line-height: 25px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-right: 0.9rem;
+    color: #72808E;
+  }
+  &_active &__num {
+    color: #fff;
+    background-color: #467BE3;
+    border-color: transparent;
+  }
+}
+
+.program-choice {
+  width: 100%;
+  background: #fff;
+  border: none;
+  box-sizing: content-box;
+  padding: 0.5rem 1rem;
+  margin: 0 -1rem;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 4px;
+  &:focus,
+  &:hover {
+    outline: none;
+    border: none;
+  }
+  &_active {
+    border: none;
+    background-color: rgba(70, 123, 227, 0.08);
+    &:focus,
+    &:hover {
+      border: none;
+    }
+  }
+  &__wrap {
+    & .card-body {
+      padding-bottom: 0.3rem;
+    }
+  }
+  &__icon {
+    float: right;
+    margin-top: 0.3rem;
+  }
+  &__all {
+    width: 100%;
+    box-sizing: content-box;
+    margin: 0 -1rem !important;
+    padding: 0.6rem 1rem;
+    border: none;
+  }
+}
+
