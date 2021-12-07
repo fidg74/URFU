@@ -1,7 +1,7 @@
 <template>
     <b-container class="pb-4">
         <h1>{{ mode === 'project' ? 'Паспорта' : mode === 'request' ? 'Заявки' : 'Реализуемые проекты' }}</h1>
-        <div class="h1__description mb-4" v-if="mode === 'request' && user.canCreate && !!this.semesterActual && this.semesterActual.period && (user.isRop || user.isZP)">
+        <div class="h1__description mb-sm-4" v-if="mode === 'request' && user.canCreate && !!this.semesterActual && this.semesterActual.period && (user.isRop || user.isZP)">
             Подайте заявку на {{ this.semesterActual.period.toLowerCase() }} семестр {{ this.semesterActual.year }} до {{ this.formatDate(this.semesterActual.deadline) }}.
             <i class="far fa-question-circle" v-b-tooltip.hover title="Если вы оставите заявку после указанной даты, то ее реализация переносится на следующий семестр." />
             <div class="mt-2" v-if="variables && variables.length">
@@ -9,12 +9,12 @@
             </div>
         </div>
 
-        <b-row class="mt-4" v-if="mode === 'request'">
-            <b-col v-if="user.isZP || user.isRop" sm="8" order-md="1" order="2">
+        <b-row class="mt-sm-4 tabs-row" v-if="mode === 'request'">
+            <b-col v-if="user.isZP || user.isRop" class="overflow-auto" sm="8">
                 <Tabs v-if="tabItems && tabItems.length" v-model="filterOwn" :items="tabItems" />
                 <b-spinner variant="secondary" class="ml-4 filter__loading" v-if="isLoading" />
             </b-col>
-            <b-col v-else sm="8" order-md="1" order="2">
+            <b-col v-else sm="8">
                 <div class="h1__description" v-if="mode === 'request' && !!this.semesterActual && this.semesterActual.period">
                     Подайте заявку на {{ this.semesterActual.period.toLowerCase() }} семестр {{ this.semesterActual.year }} до {{ this.formatDate(this.semesterActual.deadline) }}.
                     <i class="far fa-question-circle" v-b-tooltip.hover title="Если вы оставите заявку после указанной даты, то ее реализация переносится на следующий семестр." />
@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </b-col>
-            <b-col v-if="user.canCreate" class="text-right" sm="4" order-md="2" order="1">
+            <b-col v-if="user.canCreate" class="text-right" sm="4">
                 <b-button variant="primary" to="/new_request" class="mobile-w100 m-mb-2">
                     <i class="icon icon-plus" />
                     <span>Подать новую заявку</span>
@@ -37,7 +37,7 @@
         </div>
 
         <b-row class="projects">
-            <b-col sm="9" order-md="1" order="2">
+            <b-col sm="9">
                 <b-card class="filter__search">
                     <b-form-group class="form__search" label="Поиск">
                         <b-form-input class="form__search-input" v-model="search" required autocomplete="off" type="text" :placeholder="mode === 'project' ? 'Поиск по паспортам' : mode === 'request' ? 'Поиск по заявкам' : 'Поиск по проектам'" />
@@ -63,7 +63,7 @@
                     </b-card>
                 </div>
             </b-col>
-            <b-col sm="3" order-md="2" order="1">
+            <b-col sm="3">
                 <div v-pin-aside="100" class="m-mb-4">
                     <b-card class="filter__search filter__search_aside">
                         <b-form-group class="form__search" label="Поиск">
@@ -99,34 +99,34 @@
                             </b-form-group>
                     </div>
 
-          <div class="filter__aside filter_items">
-            <div v-if="user.isPlAdmin" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('manager') > -1 }">
-              <b-button @click="filterItemToggle('manager')">Заказчик <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
-              <div class="filter__content">
-                <b-form-checkbox-group v-if="managers && managers.length && filterItem.manager && filterItem.manager.length" v-model="filterItem.manager" name="filterItemPartner" stacked>
-                  <b-form-checkbox v-for="managerId in filterItem.manager" :key="managerId" :value="managerId">
-                    <div class="text-oneline ml-2 mb-2">{{ userFullName(getManager(managerId)) }}</div>
-                  </b-form-checkbox>
-                </b-form-checkbox-group>
-                <ManagerSelect button multiple v-model="filterItem.manager" />
-              </div>
-            </div>
+                <div class="filter__aside filter_items">
+                  <div v-if="user.isPlAdmin" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('manager') > -1 }">
+                    <b-button @click="filterItemToggle('manager')">Заказчик <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
+                    <div class="filter__content">
+                      <b-form-checkbox-group v-if="managers && managers.length && filterItem.manager && filterItem.manager.length" v-model="filterItem.manager" name="filterItemPartner" stacked>
+                        <b-form-checkbox v-for="managerId in filterItem.manager" :key="managerId" :value="managerId">
+                          <div class="text-oneline ml-2 mb-2">{{ userFullName(getManager(managerId)) }}</div>
+                        </b-form-checkbox>
+                      </b-form-checkbox-group>
+                      <ManagerSelect button multiple v-model="filterItem.manager" />
+                    </div>
+                  </div>
 
-            <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('multiprogram') > -1 }">
-              <b-button @click="filterItemToggle('multiprogram')">Программы <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
-              <div class="filter__content">
-                <b-form-radio class="mb-3" v-model="filterItem.multiprogram" value="yes">Межпрограммный</b-form-radio>
-                <b-form-radio v-model="filterItem.multiprogram" value="no">Монопрограммный</b-form-radio>
-              </div>
-            </div>
+                <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('multiprogram') > -1 }">
+                  <b-button @click="filterItemToggle('multiprogram')">Программы <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
+                  <div class="filter__content">
+                    <b-form-radio class="mb-3" v-model="filterItem.multiprogram" value="yes">Межпрограммный</b-form-radio>
+                    <b-form-radio v-model="filterItem.multiprogram" value="no">Монопрограммный</b-form-radio>
+                  </div>
+                </div>
 
-            <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('research') > -1 }">
-              <b-button @click="filterItemToggle('research')">Тип <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
-              <div class="filter__content">
-                <b-form-radio class="mb-3" v-model="filterItem.research" value="yes">Исследовательский</b-form-radio>
-                <b-form-radio v-model="filterItem.research" value="no">Прикладной</b-form-radio>
-              </div>
-            </div>
+                <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('research') > -1 }">
+                  <b-button @click="filterItemToggle('research')">Тип <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
+                  <div class="filter__content">
+                    <b-form-radio class="mb-3" v-model="filterItem.research" value="yes">Исследовательский</b-form-radio>
+                    <b-form-radio v-model="filterItem.research" value="no">Прикладной</b-form-radio>
+                  </div>
+                </div>
 
             <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('difficulty') > -1 }">
               <b-button @click="filterItemToggle('difficulty')">Сложность <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
@@ -860,7 +860,8 @@ export default {
 }
 @media (max-width: 575px) {
     .row.projects {
-        margin-top: 8px;
+        /* margin-top: 8px; */
+        margin-top: 0;
     }
     .btn.mobile-w100 {
         display: block;
@@ -870,7 +871,8 @@ export default {
         margin-top: 8px;
     }
     .m-mb-2 {
-        margin-bottom: 8px;
+        /* margin-bottom: 8px; */
+        margin-bottom: 17px;
     }
     .m-mb-4 {
         margin-bottom: 16px;
@@ -904,6 +906,39 @@ export default {
     }
     .project-card.card_content .card-body {
         padding: 15px;
+    }
+
+    h1 {
+      font-size: 22px;
+      line-height: 30px;
+      margin-bottom: 10px;
+    }
+
+    h1 + .h1__description {
+      margin-top: initial;
+    }
+
+    .h1__description {
+      line-height: 20px;
+      margin-bottom: 15px;
+    }
+
+    .tabs-row .ui-tabs {
+      margin-bottom: 17px;
+    }
+
+    .tabs-row .btn {
+      height: 36px;
+    }
+
+    .btn > i {
+      margin-left: -20px;
+      margin-top: 5px;
+      position: absolute;
+    } 
+
+    .btn > i + span {
+      margin-left: 0;
     }
 }
 </style>

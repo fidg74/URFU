@@ -161,9 +161,16 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    /* Убрать верх */
+    background: #F1F4FA;
+    padding-top: 100px;
   }
   .app__footer {
     text-align: center;
     margin-top: 2rem;
+  }
+  /* убрать верх */
+  .aside {
+      display: none;
   }
 </style>
