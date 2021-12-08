@@ -8,7 +8,7 @@
                     <router-link :to="projectLink ? projectLink : ''">{{ (mode === 'request' && project.request_status != "DRFT") ? (project.req_name ? project.req_name : 'Без названия') : (project.name ? project.name : 'Без названия') }}</router-link>
                 </h2>
             </b-col>
-            <b-col cols="3" class="text-right">
+            <b-col cols="3" class="text-sm-right">
                 <template v-if="user.isZP && mode === 'request'">
                     <!-- <b-badge :class="'badge-' + project.request_status" v-if="project.rop_status !== 'PRSN'" :variant="project.rop_status === 'PRSD' ? 'danger' : 'primary'">{{ model(project.request_status !== 'PUBL' ? project.request_status : project.rop_status) }}</b-badge> -->
                     <b-badge :class="'badge-' + project.request_status" v-if="project.request_status === 'DCLN'" :variant="project.rop_status === 'PRSD' ? 'danger' : 'primary'">Отказ отправлен</b-badge>
@@ -53,8 +53,11 @@
                         v-if="!user.isZP && project.bef_status === 'PUBL' &&
                                     myActiveOffers && myActiveOffers.length > 0"
             >
-                <b-icon-info-circle-fill class="mr-2" /> {{ project.is_expired ? 'Срок ответа на&nbsp;заявку закончился' : 'Срок ответа на&nbsp;заявку заканчивается' }} 
-                <b>{{ formatDate(project.exp_date) }}</b>
+                <b-icon-info-circle-fill class="mr-sm-2" /> 
+                <span>
+                    {{ project.is_expired ? 'Срок ответа на&nbsp;заявку закончился' : 'Срок ответа на&nbsp;заявку заканчивается' }} 
+                    <b>{{ formatDate(project.exp_date) }}</b>
+                </span>
             </div>
 
             <div :class="'project-card__message project-card__message_' + (project.is_expired ? 'danger' : 'info')"
@@ -80,13 +83,13 @@
                 <b-icon-info-circle-fill class="mr-2" /> Все РОПы отказались от&nbsp;заявки
             </div>
 
-            <div v-if="(user.isPlAdmin || !meIsPartner) && CHPR">
+            <div class="project-card__customer" v-if="(user.isPlAdmin || !meIsPartner) && CHPR">
                 <h4>Заказчик</h4>
                 {{ userFullName(CHPR.user) }}
             </div>
             <hr class="hr_full" v-if="CHPR && (MROP || MCUR)">
 
-            <div v-if="MROP" class="mt-4">
+            <div v-if="MROP" class="mt-sm-4">
                 <h4>Главный руководитель образовательной программы</h4>
                 {{ userFullName(MROP.user) }}
             </div>
@@ -116,7 +119,7 @@
                 </div>
             </template>
 
-            <div class="project-card__buttons">
+            <div class="project-card__buttons" ref="cardButtons" v-if="amountButtons">
                 <AcceptProject v-if="meIsMROP && project.request_status === 'PUBL'"
                     :project=project
                     @update-project="(projectData) => $emit('update-project', projectData)"
@@ -205,6 +208,7 @@ export default {
             textFull: false,
 
             projectDeleted: false,
+            amountButtons: 0
         }
     },
     created () {
@@ -214,6 +218,9 @@ export default {
         this.meIsPartner = this.project.roles.some(role => role.role === 'CHPR' && role.user.id === this.user.id)
         this.meIsRROP = this.project.programs ? this.project.programs.some(program => program.roles.some(role => role.role === 'RROP' && role.user.id === this.user.id)) : null
         this.meIsMROP = !!this.MROP && (this.MROP.user.id === this.user.id)
+    },
+    mounted() {
+        this.amountButtons = this.$refs.cardButtons.children.length
     },
     methods: {
         model,
@@ -311,7 +318,7 @@ export default {
                 if (rop && rop.id) res.push(rop.user)
                 return res
             }, [])
-        },
+        }
     }
 }
 </script>
@@ -407,6 +414,10 @@ export default {
     background-color: #effff3;
 }
 @media (max-width: 575px) {
+    .project-card {
+       color: #000; 
+    }
+
     .project-card.card_content {
         margin-top: 16px;
     }
@@ -454,17 +465,64 @@ export default {
         width: 100%;
         display: block;
         max-width: 100%;
-        padding-top: 5px;
     }
     .project-card__caption {
-        font-size: 12px;
-        line-height: 14px;
+        font-size: 13px;
+        line-height: 16px;
         margin-bottom: 8px;
     }
     h2.project-card__title {
         font-size: 18px;
-        line-height: 18px;
-        margin-bottom: 8px;
+        line-height: 22px;
+        /* margin-bottom: 14px; */
+        margin-bottom: 0;
+    }
+
+    .project-card__customer {
+        margin-top: 14px;
+    }
+
+    h2.project-card__title a {
+        color: #111112;
+    }
+
+    .project-card.card_content .card-body {
+        padding: 20px 15px;
+    }
+
+    .project-card .badge {
+        font-size: 13px;
+        line-height: 16px;
+        padding: 4px 9px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+    }
+
+    .project-card h4 {
+        line-height: 20px;
+    }
+
+    .project-card__buttons {
+        margin-top: 17px;
+    }
+
+    .project-card__buttons .btn {
+        width: fit-content;
+        padding: 6px 16px;
+    }
+
+    .project-card__message {
+        margin-top: 15px;
+        display: flex;
+    }
+
+    .project-card__message span {
+        display: block;
+    }
+
+    .project-card__message .b-icon {
+        margin-top: 3px;
+        margin-right: 5px;
     }
 }
 </style>

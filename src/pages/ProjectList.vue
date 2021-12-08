@@ -950,7 +950,7 @@ export default {
         margin-bottom: 0;
     }
     .project-card.card_content .card-body {
-        padding: 15px;
+        padding: 20px 15px 25px !important;
     }
 
     h1 {
@@ -1064,6 +1064,10 @@ export default {
       height: 40px;
       display: flex;
       align-items: center;
+    }
+
+    .project-card .badge {
+      position: unset;
     }
 }
 </style>
