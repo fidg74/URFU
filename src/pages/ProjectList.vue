@@ -1,5 +1,5 @@
 <template>
-    <b-container class="pb-4">
+    <b-container class="pb-sm-4">
         <h1>{{ mode === 'project' ? 'Паспорта' : mode === 'request' ? 'Заявки' : 'Реализуемые проекты' }}</h1>
         <div class="h1__description mb-sm-4" v-if="mode === 'request' && user.canCreate && !!this.semesterActual && this.semesterActual.period && (user.isRop || user.isZP)">
             Подайте заявку на {{ this.semesterActual.period.toLowerCase() }} семестр {{ this.semesterActual.year }} до {{ this.formatDate(this.semesterActual.deadline) }}.
@@ -41,7 +41,7 @@
                 <b-card class="filter__search">
                     <b-form-group class="form__search" label="Поиск">
                         <b-form-input class="form__search-input" v-model="search" required autocomplete="off" type="text" :placeholder="mode === 'project' ? 'Поиск по паспортам' : mode === 'request' ? 'Поиск по заявкам' : 'Поиск по проектам'" />
-                        <button class="filter-toggle d-sm-none">
+                        <button class="filter-toggle d-sm-none" @click="filterMobileShow = true">
                           <svg class="filter-toggle__svg" width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 18.75C3.5 16.6789 5.17893 15 7.25 15C9.32107 15 11 16.6789 11 18.75C11 20.8211 9.32107 22.5 7.25 22.5C5.17893 22.5 3.5 20.8211 3.5 18.75ZM7.25 16.5C6.00736 16.5 5 17.5074 5 18.75C5 19.9926 6.00736 21 7.25 21C8.49264 21 9.5 19.9926 9.5 18.75C9.5 17.5074 8.49264 16.5 7.25 16.5Z" fill="#467BE3"/>
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M14 11.25C14 9.17893 15.6789 7.5 17.75 7.5C19.8211 7.5 21.5 9.17893 21.5 11.25C21.5 13.3211 19.8211 15 17.75 15C15.6789 15 14 13.3211 14 11.25ZM17.75 9C16.5074 9 15.5 10.0074 15.5 11.25C15.5 12.4926 16.5074 13.5 17.75 13.5C18.9926 13.5 20 12.4926 20 11.25C20 10.0074 18.9926 9 17.75 9Z" fill="#467BE3"/>
@@ -55,7 +55,7 @@
                         <button class="form__search-close" @click="search = null" />
                     </b-form-group>
           
-                    <div v-if="((mode === 'request' && user.isRop && filterOwn === 'all') || user.isZP)" class="program">
+                    <div v-if="((mode === 'request' && user.isRop && filterOwn === 'all') || user.isZP)" class="program d-none d-sm-block">
                         <ProgramSelect btn="Показать проекты" multiple v-model="filterItem.program"/>
                     </div>
 
@@ -105,7 +105,23 @@
                     </b-card>
                 </div>
             </b-col>
-            <b-col sm="3">
+
+            <b-col sm="3" class="mobile-filter" :class="{'show': filterMobileShow}">
+
+                <div class="mobile-filter__header">
+                    <h3 class="mobile-filter__title">Настройки фильтров</h3>
+                    <button class="mobile-filter__close" @click="filterMobileShow = false">
+                      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="1.29289" y1="15.2929" x2="15.435" y2="1.15076" stroke="#467BE3" stroke-width="2"/>
+                        <path d="M2 1.29297L16.1421 15.4351" stroke="#467BE3" stroke-width="2"/>
+                      </svg>
+                    </button>
+                </div>
+
+                <div v-if="((mode === 'request' && user.isRop && filterOwn === 'all') || user.isZP)" class="program d-sm-none">
+                    <ProgramSelect btn="Показать проекты" multiple v-model="filterItem.program"/>
+                </div>
+
                 <div v-pin-aside="100" class="m-mb-4">
                     <b-card class="filter__search filter__search_aside">
                         <b-form-group class="form__search" label="Поиск">
@@ -122,7 +138,7 @@
                         </b-form-checkbox>
                     </b-card>
 
-                    <div class="filter__aside d-sm-none" v-if="mode !== 'implementation'">
+                    <div class="filter__aside d-none d-sm-block" v-if="mode !== 'implementation'">
                         <h4 class="pl-4 mb-2 weight-bold">Статус</h4>
                             <b-form-group v-if="mode === 'request'">
                                 <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все заявки</b-form-radio>
@@ -418,7 +434,9 @@ export default {
       },
 
       throttleFetchList: null,
-      zp_notif_text: ''
+      zp_notif_text: '',
+
+      filterMobileShow: false
     }
   },
   created () {
@@ -1066,8 +1084,56 @@ export default {
       align-items: center;
     }
 
+    .status-filter .filter__status:last-child .btn {
+      margin-bottom: 7px;
+    }
+
     .project-card .badge {
       position: unset;
+    }
+
+    .projects__list {
+      margin-bottom: 30px;
+    }
+
+    /* Фильтр мобильной версии */
+
+    .mobile-filter {
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      background: #FFFFFF;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+      z-index: 100;
+      padding: 0;
+      transition: .5s;
+    }
+
+    .mobile-filter.show {
+      top: 0;
+    }
+
+    .mobile-filter__header {
+      padding: 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-filter__title {
+      font-size: 18px;
+      line-height: 23px;
+      color: #000;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .mobile-filter__close {
+      background: none;
+      border: none;
+      padding: 0;
+      padding-right: 3px;
     }
 }
 </style>
