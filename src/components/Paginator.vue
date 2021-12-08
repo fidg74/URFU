@@ -90,7 +90,7 @@ export default {
       &--prev {
         display: flex;
         align-items: center;
-        margin-left: 12px;
+        margin-right: 12px;
         font-size: 14px;
         line-height: 20px;
         gap: 5px;
