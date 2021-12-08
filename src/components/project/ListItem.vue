@@ -119,7 +119,7 @@
                 </div>
             </template>
 
-            <div class="project-card__buttons" ref="cardButtons" v-if="amountButtons">
+            <div class="project-card__buttons" ref="cardButtons" v-show="amountButtons">
                 <AcceptProject v-if="meIsMROP && project.request_status === 'PUBL'"
                     :project=project
                     @update-project="(projectData) => $emit('update-project', projectData)"
