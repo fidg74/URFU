@@ -50,7 +50,7 @@
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M10.25 3L24.5 3L24.5 4.5L10.25 4.5L10.25 3ZM0.499998 3L4.25 3L4.25 4.5L0.499998 4.5L0.499998 3Z" fill="#467BE3"/>
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M14.75 10.5L0.499999 10.5L0.499999 12L14.75 12L14.75 10.5ZM24.5 10.5L20.75 10.5L20.75 12L24.5 12L24.5 10.5Z" fill="#467BE3"/>
                           </svg>
-                          <span class="filter-toggle__num">2</span>
+                          <span class="filter-toggle__num" v-if="numActiveFilters">{{ numActiveFilters }}</span>
                         </button>
                         <button class="form__search-close" @click="search = null" />
                     </b-form-group>
@@ -653,6 +653,9 @@ export default {
 
       return tmpTabs
     },
+    numActiveFilters() {
+      return this.filterActive.length
+    },
     params () {
       const paramsRes = new URLSearchParams()
       const tempMode = this.mode === 'implementation' ? 'project' : this.mode
@@ -1117,13 +1120,13 @@ export default {
       box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
       z-index: 100;
       padding: 0;
+      overflow: auto;
+      max-height: 100vh;
       transition: .5s;
     }
 
     .mobile-filter.show {
       top: 0;
-      overflow: auto;
-      max-height: 100vh;
     }
 
     .mobile-filter__header {
