@@ -143,25 +143,4 @@ export default {
     right: 19px;
   }
 }
-
-@media (max-width: 575px) {
-  .app__footer {
-    margin-top: 53px;
-  }
-  .app__footer .container {
-    text-align: left;
-  }
-
-  .app__footer .container div {
-    margin-bottom: 20px;
-  }
-  .fab {
-    width: 40px;
-    height: 40px;
-  }
-  .fab-container {
-    right: 20px;
-    bottom: 20px;
-  }
-}
 </style>

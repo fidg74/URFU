@@ -91,7 +91,7 @@
                     :showHideButton="serviceStatus === SERVICE_ACTIVATED"
                 >
                     <template v-slot:header>
-                        <h2 class="video-title">Добро пожаловать в сервис Проектное обучение!</h2>
+                        <h2>Добро пожаловать в сервис Проектное обучение!</h2>
                     </template>
                 </VideoCard>
             </b-col>
@@ -253,7 +253,6 @@ export default {
 #app {
     background: #F1F4FA;
     padding-top: 100px;
-    padding-bottom: 0;
 }
 .aside {
     display: none;
@@ -447,61 +446,6 @@ iframe.modal-video {
         line-height: 30px;
         letter-spacing: -0.4px;
         margin-bottom: 12px;
-    }
-    h2 {
-        font-weight: 500;
-        font-size: 20px;
-        padding: 23px 35px 6px 16px !important;
-        margin: 0x;
-    }
-
-    .video-card .video-thumbnail {
-        height: 143px;
-        border: 1px solid #828282;
-        border-radius: 6px;
-        margin-bottom: 13px;
-    }
-
-    .video-card {
-        padding: 14px 13px 14px 13px !important;
-    }
-
-    .video-card .card-body {
-        padding: 0 !important;
-    }
-
-    h2.video-title {
-        padding: 0 !important;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 26px;
-        letter-spacing: -0.2px;
-        margin-right: 50px;
-        margin-bottom: 15px;
-    }
-
-    h2.video-title + p {
-        font-size: 16px;
-        line-height: 20px;
-        letter-spacing: -0.2px;
-    }
-
-    .no-notifications {
-        padding-left: 16px;
-        margin-bottom: 18px;
-        line-height: 22px;
-    }
-
-    .mini-body > a > i {
-        min-width: 50px;
-        margin-right: 13px;
-    }
-    .mini-body > a {
-        font-weight: 500;
-        margin-right: 41px;
-        font-size: 16px;
-        line-height: 20px;
-        letter-spacing: -0.4px;
     }
 
      .alert {
