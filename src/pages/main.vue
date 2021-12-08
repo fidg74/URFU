@@ -50,7 +50,7 @@
         <b-row>
             <b-col v-if="serviceStatus === SERVICE_ACTIVATED" sm>
                 <b-card class="std-card mb-4" no-body>
-                    <h2 style="padding:28px 30px 0 30px;" >Лента основных событий</h2>
+                    <h2 style="padding:28px 30px 0 30px;" class="start-title">Лента основных событий</h2>
                     <b-overlay :show="!(notifications)" rounded="sm">
                         <ul v-if="notifications && notifications.length > 0" class="notification-list">
                             <li v-for="(notification, index) in notifications" :key="index">
@@ -98,7 +98,7 @@
             <b-col v-if="serviceStatus !== SERVICE_ACTIVATED">
                 <b-card class="std-card mb-4" no-body>
                     <b-card-body>
-                        <h2>Что мы предлагаем?</h2>
+                        <h2 class="what-title">Что мы предлагаем?</h2>
                         <p>Реализацию практических задач вашей организации в рамках образовательной деятельности наших студентов. Вы сможете не только решать задачи силами студентов, но и осуществлять последующий рекрутинг лучших из них. А также, применить реальные результаты студенческих проектов в своей деятельности. Для того, чтобы принять участие в проектном обучении и начать работу со студентами вам необходимо:</p>
                         <ul>
                             <li>заполнить форму заявки на проект и отправить ее на рассмотрение в УрФУ;</li>
@@ -448,7 +448,7 @@ iframe.modal-video {
         letter-spacing: -0.4px;
         margin-bottom: 12px;
     }
-    h2 {
+    h2.start-title {
         font-weight: 500;
         font-size: 20px;
         padding: 23px 35px 6px 16px !important;
