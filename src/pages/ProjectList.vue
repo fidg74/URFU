@@ -326,7 +326,7 @@
       </b-col>
     </b-row>
 
-    <Paginator v-if="projects && projects.length" :pages="pagesData" @change-page="fetchList" />
+    <Paginator v-if="projects && projects.length" :pages="pagesData" @change-page="fetchList" class="paginator-projects" />
   </b-container>
 </template>
 
@@ -1093,7 +1093,11 @@ export default {
     }
 
     .projects__list {
-      margin-bottom: 30px;
+      margin-bottom: 0px;
+    }
+
+    .paginator-projects {
+      margin-top: 30px;
     }
 
     /* Фильтр мобильной версии */
