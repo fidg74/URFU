@@ -41,6 +41,17 @@
                 <b-card class="filter__search">
                     <b-form-group class="form__search" label="Поиск">
                         <b-form-input class="form__search-input" v-model="search" required autocomplete="off" type="text" :placeholder="mode === 'project' ? 'Поиск по паспортам' : mode === 'request' ? 'Поиск по заявкам' : 'Поиск по проектам'" />
+                        <button class="filter-toggle d-sm-none">
+                          <svg class="filter-toggle__svg" width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 18.75C3.5 16.6789 5.17893 15 7.25 15C9.32107 15 11 16.6789 11 18.75C11 20.8211 9.32107 22.5 7.25 22.5C5.17893 22.5 3.5 20.8211 3.5 18.75ZM7.25 16.5C6.00736 16.5 5 17.5074 5 18.75C5 19.9926 6.00736 21 7.25 21C8.49264 21 9.5 19.9926 9.5 18.75C9.5 17.5074 8.49264 16.5 7.25 16.5Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14 11.25C14 9.17893 15.6789 7.5 17.75 7.5C19.8211 7.5 21.5 9.17893 21.5 11.25C21.5 13.3211 19.8211 15 17.75 15C15.6789 15 14 13.3211 14 11.25ZM17.75 9C16.5074 9 15.5 10.0074 15.5 11.25C15.5 12.4926 16.5074 13.5 17.75 13.5C18.9926 13.5 20 12.4926 20 11.25C20 10.0074 18.9926 9 17.75 9Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 3.75C3.5 1.67893 5.17893 1.6891e-06 7.25 1.50804e-06C9.32107 1.32698e-06 11 1.67893 11 3.75C11 5.82107 9.32107 7.5 7.25 7.5C5.17893 7.5 3.5 5.82107 3.5 3.75ZM7.25 1.5C6.00736 1.5 5 2.50736 5 3.75C5 4.99264 6.00736 6 7.25 6C8.49264 6 9.5 4.99264 9.5 3.75C9.5 2.50736 8.49264 1.5 7.25 1.5Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.25 18L24.5 18L24.5 19.5L10.25 19.5L10.25 18ZM0.5 18L4.25 18L4.25 19.5L0.5 19.5L0.5 18Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.25 3L24.5 3L24.5 4.5L10.25 4.5L10.25 3ZM0.499998 3L4.25 3L4.25 4.5L0.499998 4.5L0.499998 3Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.75 10.5L0.499999 10.5L0.499999 12L14.75 12L14.75 10.5ZM24.5 10.5L20.75 10.5L20.75 12L24.5 12L24.5 10.5Z" fill="#467BE3"/>
+                          </svg>
+                          <span class="filter-toggle__num">2</span>
+                        </button>
                         <button class="form__search-close" @click="search = null" />
                     </b-form-group>
           
@@ -52,6 +63,37 @@
                         <div class="ml-1 text-oneline">Показать горящие заявки</div>
                     </b-form-checkbox>
                 </b-card>
+
+                <div class="filter__aside status-filter d-sm-none" v-if="mode !== 'implementation'">
+                    <div class="status-filter__dropdown" @click="toggleFilterStatus">
+                      <h4 class="pl-sm-4 mb-0 mb-sm-2 weight-bold">Статус</h4>
+                      <div class="status-filter__arrow" :class="{'opened': showFilterStatus}">
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <mask id="mask0_17260_1460" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="8" height="8">
+                          <rect width="8" height="8" fill="#C4C4C4"/>
+                          </mask>
+                          <g mask="url(#mask0_17260_1460)">
+                          <path d="M4.15787 7.29702L7.24894 3.32279C7.35112 3.19142 7.2575 3 7.09107 3L0.908928 3C0.742498 3 0.648879 3.19142 0.751057 3.32279L3.84213 7.29702C3.9222 7.39997 4.0778 7.39997 4.15787 7.29702Z" fill="#467BE3"/>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                    <b-form-group v-if="mode === 'request'" :class="{'d-none': !showFilterStatus}">
+                        <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все заявки</b-form-radio>
+                        <b-form-radio :disabled="!(user.canCreate && (!filterOwn || filterOwn === 'mine'))" class="filter__status filter__status_DRFT" button v-model="filterState" value="DRFT">Черновик</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PUBL">На рассмотрении</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_ACPT" button v-model="filterState" value="ACPT">Принятые</b-form-radio>
+                        <b-form-radio v-if="user.mainRole !== 'curator'" class="filter__status filter__status_DCLN" button v-model="filterState" :value="user.isRop ? 'PDCL' : 'DCLN'">Непринятые</b-form-radio>
+                    </b-form-group>
+                    <b-form-group v-else>
+                        <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все паспорта</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PSST">Формирование паспорта</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PSPT">Паспорт на&nbsp;согласовании у&nbsp;партнера</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PSUN">Паспорт на&nbsp;согласовании у&nbsp;университета</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_ACPT" button v-model="filterState" value="PSAP">Паспорт утвержден</b-form-radio>
+                        <!-- <b-form-radio class="filter__status filter__status_ACPT" button v-model="filterState" value="CMPL">Завершенные</b-form-radio> -->
+                    </b-form-group>
+                </div>
 
                 <div class="projects__list" :class="{ 'avoid-events': isLoading }" v-if="projects && projects.length">
                     <ProjectListItem :mode="mode" @update-project="updateProjectsElement" :project="project" v-for="project in projects" :key="project.id" />
@@ -80,7 +122,7 @@
                         </b-form-checkbox>
                     </b-card>
 
-                    <div class="filter__aside" v-if="mode !== 'implementation'">
+                    <div class="filter__aside d-sm-none" v-if="mode !== 'implementation'">
                         <h4 class="pl-4 mb-2 weight-bold">Статус</h4>
                             <b-form-group v-if="mode === 'request'">
                                 <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все заявки</b-form-radio>
@@ -366,7 +408,7 @@ export default {
       filterActive: [],
       showHotRequest: false,
       filterItemYear: null,
-
+      showFilterStatus: false,
       projects: null,
       cancelToken: null,
       search: null,
@@ -530,6 +572,9 @@ export default {
       const index = this.projects.findIndex(proj => proj.id === projectData.id)
       this.$set(this.projects, index, projectData)
     },
+    toggleFilterStatus() {
+      this.showFilterStatus = !this.showFilterStatus
+    }
   },
   computed: {
     isLoading () { return typeof this.cancelToken === 'function' },
@@ -939,6 +984,86 @@ export default {
 
     .btn > i + span {
       margin-left: 0;
+    }
+
+    .status-filter {
+      margin-top: 15px;
+    }
+
+    .filter__search .card-body {
+      padding: 20px 15px 15px !important;
+    }
+
+    .filter__search legend {
+      font-size: 16px;
+      line-height: 16px;
+      padding-bottom: 8px;
+    }
+
+    .form__search > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form__search input {
+      margin-right: 15px;
+    }
+
+    .filter-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .filter-toggle__num {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(57, 146, 255, 0.12);
+      font-weight: 700;
+      font-size: 10px;
+      line-height: 10px;
+      top: -16px;
+      right: -7px;
+    }
+
+    .status-filter {
+      padding: 15px 15px 0px;
+      margin-bottom: 0;
+    }
+
+    .status-filter h4 {
+      font-weight: 500;
+    }
+
+    .status-filter__dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 15px;
+    }
+
+    .status-filter__arrow {
+      transition: .3s;
+    }
+
+    .status-filter__arrow.opened {
+      transform: rotate(180deg);
+    }
+
+    .status-filter__arrow.opened path {
+      fill: #9DA7B0;
+    }
+
+    .status-filter .filter__status .btn {
+      height: 40px;
+      display: flex;
+      align-items: center;
     }
 }
 </style>
