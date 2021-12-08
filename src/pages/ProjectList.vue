@@ -108,7 +108,7 @@
 
             <b-col sm="3" class="mobile-filter" :class="{'show': filterMobileShow}">
 
-                <div class="mobile-filter__header">
+                <div class="mobile-filter__header d-sm-none">
                     <h3 class="mobile-filter__title">Настройки фильтров</h3>
                     <button class="mobile-filter__close" @click="filterMobileShow = false">
                       <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -319,7 +319,13 @@
             </div>
           </div>
 
-          <b-button class="btn_full p-2 mr-0" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
+          <div class="mobile-filter__buttons d-sm-none">
+            <b-button class="btn_full p-2" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
+              Очистить фильтры
+            </b-button>
+          </div>
+
+          <b-button class="btn_full p-2 mr-0 d-none d-sm-inline-block" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
             Очистить фильтры
           </b-button>
         </div>
@@ -1116,6 +1122,8 @@ export default {
 
     .mobile-filter.show {
       top: 0;
+      overflow: auto;
+      max-height: 100vh;
     }
 
     .mobile-filter__header {
@@ -1138,6 +1146,58 @@ export default {
       border: none;
       padding: 0;
       padding-right: 3px;
+    }
+
+    .mobile-filter .program {
+      padding: 0 12px 16px;
+    }
+
+    .mobile-filter .program legend {
+      font-size: 16px;
+      line-height: 16px;
+      padding-bottom: 8px;
+    }
+
+    .mobile-filter .pin-aside {
+      max-height: initial;
+      padding: 0 12px 15px;
+      margin-bottom: 0 !important;
+    }
+
+    .mobile-filter .filter__aside {
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .mobile-filter .filter__item {
+      padding: 4px 0;
+    }
+
+    .mobile-filter .filter__item .btn {
+      border-radius: 4px;
+      background: rgba(57, 146, 255, 0.12);
+      color: #467BE3;
+      font-size: 13px;
+      height: 40px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mobile-filter .filter__item_open .btn {
+      color: #111112;  
+    }
+
+    .mobile-filter .filter__item .btn > i {
+      display: none;
+    }
+
+    .mobile-filter__buttons {
+      padding-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 }
 </style>
