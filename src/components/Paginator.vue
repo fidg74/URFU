@@ -58,12 +58,12 @@ export default {
   .paginator {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
 
     &__active {}
     .btn {
       border-radius: 16 px;
       width: 30px;
+      min-width: 30px;
       height: 30px;
       text-align: center;
       padding: 0;
@@ -80,7 +80,7 @@ export default {
         line-height: 20px;
         gap: 5px;
         font-weight: 400;
-        width: fit-content;
+        min-width: fit-content;
 
         &:hover {
           background-color: none;
@@ -95,7 +95,7 @@ export default {
         line-height: 20px;
         gap: 5px;
         font-weight: 400;
-        width: fit-content;
+        min-width: fit-content;
 
         &:hover {
           background-color: none;

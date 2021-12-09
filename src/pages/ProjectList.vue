@@ -332,7 +332,12 @@
       </b-col>
     </b-row>
 
-    <Paginator v-if="projects && projects.length" :pages="pagesData" @change-page="fetchList" class="paginator-projects" />
+    <b-row class="d-sm-none">
+      <b-col class="overflow-auto">
+        <Paginator v-if="projects && projects.length" :pages="pagesData" @change-page="fetchList" class="paginator-projects" />
+      </b-col>
+    </b-row>
+    
   </b-container>
 </template>
 
@@ -480,6 +485,7 @@ export default {
         })
       }).then(data => {
         this.cancelToken = null
+        // console.log(data.data)
         if (data.data) {
           this.projects = data.data.results
           this.pagesData = data.data.pages
