@@ -1127,6 +1127,7 @@ export default {
       z-index: 100;
       padding: 0;
       overflow: auto;
+      height: 100vh;
       max-height: 100vh;
       transition: .5s;
     }
