@@ -50,6 +50,7 @@
                             </div>
                         </div>
                     <b-card class="card_content mt-0">
+                        <i class="bi bi-chevron-down"></i>
                         <b-badge class="fl-right ml-2" variant="primary" v-if="project.kernel && !user.isPartner">
                             Ядерный проект
                         </b-badge>
@@ -75,18 +76,51 @@
                                 }}
                         </b-badge>
                         <h2>Описание проекта</h2>
-            
-                        <h4 class="mt-5 mb-2">Цель</h4>
-                        <div v-html="project.req_goal" class="project__user-text" />
+                        
+                        <div>
+                            <h4 class="mt-5 mb-2">Цель
+                                <svg @click="showAim = !showAim" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </h4>
+                            <transition name="fade">
+                                <div v-if="showAim" v-html="project.req_goal" class="project__user-text" />
+                            </transition>
+                        </div>
 
-                        <h4 class="mt-5 mb-2">Результат (продукт)</h4>
-                        <div v-html="project.req_result" class="project__user-text" />
-
-                        <h4 class="mt-5 mb-2">Критерии приемки</h4>
-                        <div v-html="project.req_criteria" class="project__user-text" />
-            
-                        <h4 class="mt-5 mb-2">Описание проекта</h4>
-                        <div v-html="project.req_description" class="project__user-text" />
+                        <div>
+                            <h4 class="mt-5 mb-2">Результат (продукт)
+                                <svg @click="showRes = !showRes" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </h4>
+                            <transition name="fade">
+                                <div v-if="showRes" v-html="project.req_result" class="project__user-text" />
+                            </transition>
+                        </div>
+                        
+                        <div>
+                            <h4 class="mt-5 mb-2">Критерии приемки
+                                <svg @click="showCriteria = !showCriteria" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </h4>
+                            <transition name="fade">
+                                <div v-if="showCriteria" v-html="project.req_criteria" class="project__user-text" />
+                            </transition>
+                        </div>
+                        
+                        <div>
+                            <h4 class="mt-5 mb-2">Описание проекта
+                                <svg @click="showDescription = !showDescription" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </h4>
+                            <transition name="fade">
+                                <div v-if="showDescription" v-html="project.req_description" class="project__user-text" />
+                            </transition>
+                        </div>
+                        
             
                         <h4 class="mt-5 mb-2">Максимальное количество экземпляров проекта</h4>
                         <div v-html="project.max_copies" class="project__user-text" />
@@ -239,9 +273,9 @@
                             <b-row>
                                 <b-col>
                                     <h3>Приглашения</h3>
-                                    <Person :user="offer.user" v-for="offer of resultOffers.slice(0, 3)" :key="offer.id">                                        
+                                    <Person :user="offer.user" v-for="offer of resultOffers.slice(0, 3)" :key="offer.id" >                                        
                                         <b-badge v-if="offer.status === 'declined'" variant="danger">Отказался</b-badge>
-                                        <b-badge v-else variant="warning">Не подтвержден</b-badge>
+                                        <b-badge v-else variant="warning" style="margin-top:10px;">Не подтвержден</b-badge>
                                         <template #caption>
                                             Руководитель образовательной программы
                                         </template>
@@ -285,7 +319,7 @@
                         </div>
                     </b-card>
 
-                    <b-card class="card_content" v-if="project && project.programs && project.programs.length">
+                    <b-card class="card_content mb-4" v-if="project && project.programs && project.programs.length">
                         <b-row class="mb-2">
                             <b-col>
                                 <h2>Образовательная программа</h2>
@@ -326,44 +360,48 @@
                         <FileDownload download :file="file" v-for="file in project.req_files" :key="file.file_id" class="mt-4" />
                     </b-card>
                     <InviteRop
-                                                :projectId="project.id"
-                                                :ignore="inviteIgnoreList"
-                                                v-if="
-                                                    (user.isZP && project.request_status === 'PUBL') ||
-                                                    (meIsMROP && project.request_status === 'PUBL')
-                                                " />
-                                            <ForceAssignRop
-                                                v-if="user.isZP && !MROP && project.request_status !== 'DCLN'"
-                                                :projectId="project.id"
-                                                :ropListDeclined="ropListDeclined"
-                                                :ropListActive="ropListActive"
-                                                :ropListInactive="ropListInactive"
-                                                :ignore="ignoreArray"
-                                                @update-project="(projectData) => updateProject(projectData)" />
-                                            <ZPDeclineMessages
-                                                v-if="project.request_status !== 'DCLN' && user.isZP && project.rop_status === 'PRSD'"
-                                                onlySend
-                                                showROPForceButton
-                                                :projectId="project.id"
-                                                :projectStatus="project.request_status" />
-                                            <RoleActions v-if="project && project.id == $route.params.id" />
+                        :projectId="project.id"
+                        :ignore="inviteIgnoreList"
+                        v-if="
+                            (user.isZP && project.request_status === 'PUBL') ||
+                            (meIsMROP && project.request_status === 'PUBL')
+                    " />
+                    <ForceAssignRop
+                        v-if="user.isZP && !MROP && project.request_status !== 'DCLN'"
+                        :projectId="project.id"
+                        :ropListDeclined="ropListDeclined"
+                        :ropListActive="ropListActive"
+                        :ropListInactive="ropListInactive"
+                        :ignore="ignoreArray"
+                        @update-project="(projectData) => updateProject(projectData)" />
+                    <ZPDeclineMessages
+                        v-if="project.request_status !== 'DCLN' && user.isZP && project.rop_status === 'PRSD'"
+                        onlySend
+                        showROPForceButton
+                        :projectId="project.id"
+                        :projectStatus="project.request_status" />
+                    <RoleActions v-if="project && project.id == $route.params.id" />
+                    
                     <!-- <div v-pin-bottom>
                         <b-container class="pin-bottom__container">
                             <b-row>
                                 <b-col cols="9">
                                     <b-card class="card_content">
                                         <div v-collapse-buttons class="buttons-wrapper"> -->
-                                            <b-container class="pin-bottom__container ">
-                                                <b-row>
-                                
-                                    <b-card class="card-body btn-mobile">
-                                        <div v-collapse-buttons class="buttons-wrapper">
-                                              <b-button class="btn_flat" @click="makePDF(project, 'request')">Сохранить в PDF</b-button>
-                                            </div>
-                                    </b-card>
-                                
-                            </b-row>    
-                                            </b-container>
+                    <i class="bi bi-three-dots"></i>
+                    <b-container class="pin-bottom__container">
+                        <b-row>
+                            <b-card class="card-body btn-mobile" style="margin-top: 10px; border: 1px solid #ddd; text-align: center;">
+                                <div v-collapse-buttons class="buttons-wrapper">
+                                    <b-button class="btn_flat" @click="makePDF(project, 'request')">Сохранить в  PDF
+                                        <svg style="padding: 5px; background-color: #447de1; color: white; border-radius: 3px;" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                                        </svg>
+                                    </b-button>
+                                </div>
+                            </b-card>
+                        </b-row>    
+                    </b-container>
                                             
                                         <!-- </div>
                                     </b-card>
@@ -374,7 +412,7 @@
 
                 </b-col>
                 <b-col>
-                    <div v-pin-aside>
+                    <div v-pin-aside style="margin-top: 10px;">
                         <b-alert show v-if="project.request_status === 'PUBL' && !meIsMROP && meIsRROP" variant="primary" class="mb-4 alert_icon">
                             <b-icon-info-circle-fill /> Вы участвуете. Ожидайте решения о запуске проекта
                         </b-alert>
@@ -435,7 +473,7 @@
                             </template>
                         </b-alert>
 
-                        <b-alert v-if="project.bef_status === 'PUBL' && iHaveActiveParticipationInvite && project.exp_date && !(meIsMROP || meIsRROP)" show variant="primary" class="alert_icon">
+                        <b-alert v-if="project.bef_status === 'PUBL' && iHaveActiveParticipationInvite && project.exp_date && !(meIsMROP || meIsRROP)" show variant="primary" class="alert_ico">
                             <b-icon-info-circle-fill />
                             <template>
                                 {{ project.is_expired ? 'Срок ответа на заявку закончился' : 'Срок ответа на заявку заканчивается' }}
@@ -487,6 +525,10 @@ export default {
     },
     data () {
         return {
+            showAim: true,
+            showRes: true,
+            showCriteria: true,
+            showDescription: true,
             allRolesTabItems: [
                 { label: 'Активные', value: 'active' }, 
                 { label: 'Приглашения', value: 'invite' }, 
@@ -719,13 +761,24 @@ export default {
 </script>
 
 <style>
-    #app {
+    /* #app {
         background: #F1F4FA;
         padding-top: 100px;
     }
     .aside {
         display: none;
+    } */
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s ease;
     }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
 
 
     .all-roles__tabs {
@@ -845,6 +898,9 @@ export default {
             max-height: 60px;
             padding: 0;
         }
-        
+        h1{
+            font-size: 22px;
+            line-height: 26px;
+        }
     }
 </style>
