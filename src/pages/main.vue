@@ -544,6 +544,12 @@ iframe.modal-video {
     .std-card.dashboard .mini-card > div {
         padding: 18px 9px 15px 12px;
     }
+    .std-card.dashboard .mini-card.requests {
+        padding-right: 5px;
+    }
+    .std-card.dashboard .mini-card.projects {
+        padding-left: 5px;
+    }
     .std-card.dashboard .mini-card.requests > div::before,
     .std-card.dashboard .mini-card.projects > div::before {
         left: 12px;
@@ -565,9 +571,4 @@ iframe.modal-video {
     }
 }
 
- @media (max-width: 430px) {
-        .std-card.dashboard .mini-card > div > strong {
-        
-        }
-    }
 </style>
