@@ -84,11 +84,22 @@ export default {
     color: white;
 }
 @media (max-width: 575px) {
-    .ui-tabs {
+    /* .ui-tabs {
         display: block;
     }
     .ui-tabs__item {
         display: block;
+    } */
+
+    .ui-tabs {
+        padding: 2px;
+        display: flex;
+        width: fit-content;
+        overflow: scroll;
+    }
+
+    .ui-tabs__label {
+        white-space: nowrap;
     }
 }
 </style>

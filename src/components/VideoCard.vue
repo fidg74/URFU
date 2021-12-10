@@ -13,8 +13,8 @@
                 <p>В этом коротком <a href="#" @click.prevent="showVideo">2-минутном видео</a> мы рассказываем об особенностях и задачах данного сервиса</p>
                 <a v-if="showHideButton" class="minify-btn" @click.prevent="toggleVideoCard">Свернуть</a>
             </b-card-body>
-            <b-card-body class="mini-body open">
-                <a class="view-video" href="#" @click.prevent="toggleVideoCard">
+            <b-card-body class="mini-body">
+                <a href="#" @click.prevent="toggleVideoCard">
                     <i>
                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M0.92622 16.7378C1.43776 16.7378 1.85244 17.1525 1.85244 17.6641V24.1476H8.33598C8.84752 24.1476 9.2622 24.5623 9.2622 25.0738C9.2622 25.5854 8.84752 26 8.33598 26H0.92622C0.414683 26 1.38018e-08 25.5854 1.38018e-08 25.0738V17.6641C1.38018e-08 17.1525 0.414683 16.7378 0.92622 16.7378Z" fill="#111112"/>
@@ -128,34 +128,5 @@ export default {
 }
 iframe {
     height: 80vh;
-}
-
-@media (max-width: 575px) {
-
-    .mini-body > a.view-video {
-        cursor: pointer;
-    display: inline-block;
-    font-size: 12px;
-    line-height: 30px;
-    letter-spacing: -0.2px;
-    color: #9DA7B0;
-    margin-right: 20px;
-    }
-    .mini-body > a.view-video i {
-        width: 16px;
-        min-width: 16px;
-        margin-right: 10px;
-        position: relative;
-        top: 2px;
-        height: 16px;
-        background: transparent;
-    }
-    .min-body.open {
-        padding: 0;
-    }
-    .mini-body > a.view-video i svg {
-        width: 16px;
-        height: 16px;
-    }
 }
 </style>

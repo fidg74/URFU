@@ -2,6 +2,9 @@
     <b-container>
         <b-button variant="primary" class="btn_flat mb-3" to="/requests">
             <i class="fas fa-arrow-left" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left mb-1" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+</svg>
             <span>Все заявки</span>
         </b-button>
 
@@ -27,11 +30,25 @@
             </div>
 
             <b-row class="mt-4">
-                <b-col cols="9">
+                <b-col cols="12">
                     <b-card v-if="myLastRequestIsDeclined" class="card_content mb-4">
                         <Message :message="myLastParticipationRequest" />
                     </b-card>
-
+                        <div class="project-status__wrap">
+                            <div class="text-subtitle">Прогресс заявки</div>
+                            <div :class="{ 'project-status': 1, 'project-status_active': project.bef_status === 'DRFT' }">
+                                <div class="project-status__num">1</div>
+                                <div class="project-status__title">Заполнение заявки</div>
+                            </div>
+                            <div :class="{ 'project-status': 1, 'project-status_active': project.bef_status === 'PUBL' }">
+                                <div class="project-status__num">2</div>
+                                <div class="project-status__title">Рассмотрение заявки университетом</div>
+                            </div>
+                            <div :class="{ 'project-status': 1, 'project-status_active': ['ACPT', 'DCLN'].indexOf(project.bef_status) > -1 }">
+                                <div class="project-status__num">3</div>
+                                <div class="project-status__title">Ответ на&nbsp;заявку</div>
+                            </div>
+                        </div>
                     <b-card class="card_content mt-0">
                         <b-badge class="fl-right ml-2" variant="primary" v-if="project.kernel && !user.isPartner">
                             Ядерный проект
@@ -308,14 +325,7 @@
                         <h2>Приложения</h2>
                         <FileDownload download :file="file" v-for="file in project.req_files" :key="file.file_id" class="mt-4" />
                     </b-card>
-
-                    <div v-pin-bottom>
-                        <b-container class="pin-bottom__container">
-                            <b-row>
-                                <b-col cols="9">
-                                    <b-card class="card_content">
-                                        <div v-collapse-buttons class="buttons-wrapper">
-                                            <InviteRop
+                    <InviteRop
                                                 :projectId="project.id"
                                                 :ignore="inviteIgnoreList"
                                                 v-if="
@@ -337,13 +347,30 @@
                                                 :projectId="project.id"
                                                 :projectStatus="project.request_status" />
                                             <RoleActions v-if="project && project.id == $route.params.id" />
-                                            <b-button class="btn_flat" @click="makePDF(project, 'request')">Сохранить в PDF</b-button>
-                                        </div>
+                    <!-- <div v-pin-bottom>
+                        <b-container class="pin-bottom__container">
+                            <b-row>
+                                <b-col cols="9">
+                                    <b-card class="card_content">
+                                        <div v-collapse-buttons class="buttons-wrapper"> -->
+                                            <b-container class="pin-bottom__container ">
+                                                <b-row>
+                                
+                                    <b-card class="card-body btn-mobile">
+                                        <div v-collapse-buttons class="buttons-wrapper">
+                                              <b-button class="btn_flat" @click="makePDF(project, 'request')">Сохранить в PDF</b-button>
+                                            </div>
+                                    </b-card>
+                                
+                            </b-row>    
+                                            </b-container>
+                                            
+                                        <!-- </div>
                                     </b-card>
                                 </b-col>
                             </b-row>
                         </b-container>
-                    </div>
+                    </div> -->
 
                 </b-col>
                 <b-col>
@@ -392,28 +419,14 @@
                         <b-alert show v-if="iDeclinedOffer && !(meIsMROP || meIsRROP)" variant="primary" class="mb-4 alert_icon">
                             <b-icon-info-circle-fill /> Вы&nbsp;отказывались от&nbsp;участия в&nbsp;этом проекте, но&nbsp;можете присоединиться снова
                         </b-alert>
-                        <div v-if="project.request_status === 'PUBL' && meIsPartner && (!MROP || (MROP && project.manager && (project.manager.id !== MROP.user.id)))" class="mb-4">
+                        <!-- <div v-if="project.request_status === 'PUBL' && meIsPartner && (!MROP || (MROP && project.manager && (project.manager.id !== MROP.user.id)))" class="mb-4">
                             <b-alert show variant="primary" class="alert_icon">
                                 <b-icon-info-circle-fill />
                                 <span v-if="project.is_expired">На обработку заявки потребовалось больше времени. В&nbsp;ближайшее время мы&nbsp;с&nbsp;вами свяжемся.</span>
                                 <span v-else>Вы получите ответ по&nbsp;заявке<b class="nobr"> до&nbsp;{{ formatDate(project.exp_date) }}</b></span>
                             </b-alert>
-                        </div>
-                        <div class="project-status__wrap">
-                            <div class="text-subtitle">Прогресс заявки</div>
-                            <div :class="{ 'project-status': 1, 'project-status_active': project.bef_status === 'DRFT' }">
-                                <div class="project-status__num">1</div>
-                                <div class="project-status__title">Заполнение заявки</div>
-                            </div>
-                            <div :class="{ 'project-status': 1, 'project-status_active': project.bef_status === 'PUBL' }">
-                                <div class="project-status__num">2</div>
-                                <div class="project-status__title">Рассмотрение заявки университетом</div>
-                            </div>
-                            <div :class="{ 'project-status': 1, 'project-status_active': ['ACPT', 'DCLN'].indexOf(project.bef_status) > -1 }">
-                                <div class="project-status__num">3</div>
-                                <div class="project-status__title">Ответ на&nbsp;заявку</div>
-                            </div>
-                        </div>
+                        </div> -->
+
 
                         <b-alert v-if="project.bef_status === 'PUBL' && iHaveOfferTeacherChange" show variant="primary" class="alert_icon">
                             <b-icon-info-circle-fill />
@@ -706,6 +719,15 @@ export default {
 </script>
 
 <style>
+    #app {
+        background: #F1F4FA;
+        padding-top: 100px;
+    }
+    .aside {
+        display: none;
+    }
+
+
     .all-roles__tabs {
         display: flex;
         justify-content: space-between;
@@ -816,5 +838,13 @@ export default {
     }
     #modalParticipants .modal-body .person + .person {
         margin-top: 24px;
+    }
+
+    @media (max-width: 575px) {
+        .btn-mobile{
+            max-height: 60px;
+            padding: 0;
+        }
+        
     }
 </style>
