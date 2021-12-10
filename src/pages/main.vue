@@ -7,7 +7,7 @@
                 <span v-else>Вами отправлен запрос на подключение сервиса.</span>
             </p>
             <b-alert show variant="primary" v-if="semesterActual">
-                <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="alert-icon" width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="8" cy="8.79102" r="8" fill="#467BE3"/>
                     <path d="M8 4.43121V9.26151" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M8 12.4213V8.06738" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.01 4.5"/>
@@ -18,11 +18,11 @@
         </b-card>
         <b-card v-if="serviceStatus === SERVICE_ACTIVATED" class="std-card mb-4 dashboard">
             <b-row>
-                <b-col sm class="title">
+                <b-col cols="12" sm="12" md="4" class="title">
                     <h3>Текущий период</h3>
                     <p>{{ semesterActual.period.toLowerCase() }} семестр</p>
                 </b-col>
-                <b-col sm class="mini-card requests">
+                <b-col cols="6" lg="4" md="4" class="mini-card requests">
                     <div>
                         <template v-if="stats && stats.role === 'curator'">
                             <h3>Паспорта</h3>
@@ -37,7 +37,7 @@
                         <strong v-else><b-spinner></b-spinner></strong>
                     </div>
                 </b-col>
-                <b-col sm class="mini-card projects">
+                <b-col cols="6" lg="4" md="4" class="mini-card projects">
                     <div>
                         <h3>Проекты</h3>
                         <p>реализуемые сейчас</p>
@@ -45,20 +45,12 @@
                         <strong v-else><b-spinner></b-spinner></strong>
                     </div>
                 </b-col>
-                <!-- <b-col sm class="mini-card students">
-                    <div>
-                        <h3>Студенты</h3>
-                        <p>в реализуемых проектах</p>
-                        <strong v-if="stats">{{ stats.students }}</strong>
-                        <strong v-else><b-spinner></b-spinner></strong>
-                    </div>
-                </b-col> -->
             </b-row>
         </b-card>
         <b-row>
             <b-col v-if="serviceStatus === SERVICE_ACTIVATED" sm>
                 <b-card class="std-card mb-4" no-body>
-                    <h2 style="padding:28px 30px 0 30px;" >Лента основных событий</h2>
+                    <h2 style="padding:28px 30px 0 30px;" class="start-title">Лента основных событий</h2>
                     <b-overlay :show="!(notifications)" rounded="sm">
                         <ul v-if="notifications && notifications.length > 0" class="notification-list">
                             <li v-for="(notification, index) in notifications" :key="index">
@@ -99,14 +91,14 @@
                     :showHideButton="serviceStatus === SERVICE_ACTIVATED"
                 >
                     <template v-slot:header>
-                        <h2>Добро пожаловать в сервис Проектное обучение!</h2>
+                        <h2 class="video-title">Добро пожаловать в сервис Проектное обучение!</h2>
                     </template>
                 </VideoCard>
             </b-col>
             <b-col v-if="serviceStatus !== SERVICE_ACTIVATED">
                 <b-card class="std-card mb-4" no-body>
                     <b-card-body>
-                        <h2>Что мы предлагаем?</h2>
+                        <h2 class="what-title">Что мы предлагаем?</h2>
                         <p>Реализацию практических задач вашей организации в рамках образовательной деятельности наших студентов. Вы сможете не только решать задачи силами студентов, но и осуществлять последующий рекрутинг лучших из них. А также, применить реальные результаты студенческих проектов в своей деятельности. Для того, чтобы принять участие в проектном обучении и начать работу со студентами вам необходимо:</p>
                         <ul>
                             <li>заполнить форму заявки на проект и отправить ее на рассмотрение в УрФУ;</li>
@@ -258,6 +250,15 @@ export default {
 </script>
 
 <style>
+#app {
+    background: #F1F4FA;
+    padding-top: 100px;
+    padding-bottom: 0;
+}
+.aside {
+    display: none;
+}
+
 .std-card .card-body {
     padding: 2.4rem;
 }
@@ -313,6 +314,7 @@ export default {
     line-height: 26px;
     letter-spacing: -0.2px;
     margin-bottom: 28px;
+    height: 52px;
 }
 .std-card.dashboard .mini-card > div > strong {
     font-weight: bold;
@@ -342,14 +344,6 @@ export default {
 .std-card.dashboard .mini-card.projects > div::before {
     left: 19px;
     background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzciIGhlaWdodD0iNDciIHZpZXdCb3g9IjAgMCAzNyA0NyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3QgeT0iNSIgd2lkdGg9IjMzIiBoZWlnaHQ9IjI3IiByeD0iMiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTYgMzZDNiAzNS40NDc3IDYuNjcxNTcgMzUgNy41IDM1QzguMzI4NDMgMzUgOSAzNS40NDc3IDkgMzZWNDZDOSA0Ni41NTIzIDguMzI4NDMgNDcgNy41IDQ3QzYuNjcxNTcgNDcgNiA0Ni41NTIzIDYgNDZWMzZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOC4yMzUzNSAzMy42QzguMjM1MzUgMzMuMTc4MyA4LjU2ODkgMzIuODM2NCA4Ljk4MDM2IDMyLjgzNjRDOS4zOTE4MiAzMi44MzY0IDkuNzI1MzcgMzMuMTc4MyA5LjcyNTM3IDMzLjZWNDEuMjM2NEM5LjcyNTM3IDQxLjY1ODEgOS4zOTE4MiA0MiA4Ljk4MDM2IDQyQzguNTY4OSA0MiA4LjIzNTM1IDQxLjY1ODEgOC4yMzUzNSA0MS4yMzY0VjMzLjZaIiBmaWxsPSIjMTExMTEyIi8+CjxwYXRoIGQ9Ik0yMi4zOTAxIDkuMTYzNjZDMjIuMzkwMSA4Ljc0MTkyIDIyLjcyMzcgOC40MDAwMiAyMy4xMzUxIDguNDAwMDJIMjkuMDk1MkMyOS41MDY3IDguNDAwMDIgMjkuODQwMyA4Ljc0MTkyIDI5Ljg0MDMgOS4xNjM2NkMyOS44NDAzIDkuNTg1NDEgMjkuNTA2NyA5LjkyNzMgMjkuMDk1MiA5LjkyNzNIMjMuMTM1MUMyMi43MjM3IDkuOTI3MyAyMi4zOTAxIDkuNTg1NDEgMjIuMzkwMSA5LjE2MzY2WiIgZmlsbD0iIzExMTExMiIvPgo8cGF0aCBkPSJNMjkuMDY2MyA4LjYxMTM1QzI5LjQ2MTcgOC40OTQ2NCAyOS44NzQ1IDguNzI4NTYgMjkuOTg4NCA5LjEzMzg0TDMxLjYzNzggMTUuMDA0M0MzMS43NTE3IDE1LjQwOTYgMzEuNTIzNCAxNS44MzI4IDMxLjEyOCAxNS45NDk1QzMwLjczMjcgMTYuMDY2MiAzMC4zMTk4IDE1LjgzMjMgMzAuMjA2IDE1LjQyN0wyOC41NTY2IDkuNTU2NDlDMjguNDQyNyA5LjE1MTIyIDI4LjY3MDkgOC43MjgwNyAyOS4wNjYzIDguNjExMzVaIiBmaWxsPSIjMTExMTEyIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNiAyOS43ODE4QzYgMzAuMjAzNiA2LjMzMzU1IDMwLjU0NTUgNi43NDUwMSAzMC41NDU1SDMzLjU2NTRDMzUuMjExMiAzMC41NDU1IDM2LjU0NTUgMjkuMTc3OSAzNi41NDU1IDI3LjQ5MDlWMy4wNTQ1NUMzNi41NDU1IDEuMzY3NTcgMzUuMjExMiAwIDMzLjU2NTQgMEg2Ljc0NTAxQzYuMzMzNTUgMCA2IDAuMzQxODkyIDYgMC43NjM2MzZDNiAxLjE4NTM4IDYuMzMzNTUgMS41MjcyNyA2Ljc0NTAxIDEuNTI3MjdIMzMuNTY1NEMzNC4zODgzIDEuNTI3MjcgMzUuMDU1NCAyLjIxMTA2IDM1LjA1NTQgMy4wNTQ1NVYyNy40OTA5QzM1LjA1NTQgMjguMzM0NCAzNC4zODgzIDI5LjAxODIgMzMuNTY1NCAyOS4wMTgySDYuNzQ1MDFDNi4zMzM1NSAyOS4wMTgyIDYgMjkuMzYwMSA2IDI5Ljc4MThaIiBmaWxsPSIjMTExMTEyIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNOC41MDYzNyAyMC4zOTY3QzguMTk3MTMgMjAuMjY5NSA3LjgzNjgxIDIwLjM3NTIgNy42Mjc4MiAyMC42NDEyQzcuMzI2ODcgMjEuMDI0MyA3LjQzMjE0IDIxLjYwNTYgNy44NzY2OSAyMS43OTA3QzkuNjE1NjggMjIuNTE1IDExLjQ4NzQgMjIuOTA5MSAxMy40Mzc0IDIyLjkwOTFDMjAuNjAwMyAyMi45MDkxIDI2LjcwNyAxNy41OTA5IDI5LjA1ODYgMTAuMTI4N0MyOS4yMTA2IDkuNjQ2MzIgMjguODUxNCA5LjE2MzcgMjguMzU2OSA5LjE2MzdDMjguMDIzOSA5LjE2MzcgMjcuNzMyIDkuMzg5NjEgMjcuNjI5IDkuNzE0MTlDMjUuNDM3MiAxNi42MTc3IDE5LjgwNDIgMjEuMzgxOSAxMy40Mzc0IDIxLjM4MTlDMTEuNzIyOSAyMS4zODE5IDEwLjA2MTYgMjEuMDM2NCA4LjUwNjM3IDIwLjM5NjdaIiBmaWxsPSIjMTExMTEyIi8+Cjwvc3ZnPgo=");
-}
-@media (max-width: 575px) {
-    .std-card.dashboard .col-sm + .col-sm {
-        margin-top: 12px;
-    }
-    .std-card.dashboard .title {
-        padding-left: 35px;
-    }
 }
 .std-card p, .std-card b, .std-card ul {
     font-size: 16px;
@@ -439,5 +433,141 @@ iframe.modal-video {
 .alert {
     font-size: 16px;
     line-height: 24px;
+    position: relative;
 }
+
+@media (max-width: 575px) {
+    .card-body {
+        padding: 14px 13px 17px 13px !important;
+    }
+
+    h1 {
+        font-weight: 500;
+        font-size: 22px;
+        line-height: 30px;
+        letter-spacing: -0.4px;
+        margin-bottom: 12px;
+    }
+    h2.start-title {
+        font-weight: 500;
+        font-size: 20px;
+        padding: 23px 35px 6px 16px !important;
+        margin: 0x;
+    }
+
+    .video-card .video-thumbnail {
+        height: 143px;
+        border: 1px solid #828282;
+        border-radius: 6px;
+        margin-bottom: 13px;
+    }
+
+    .video-card {
+        padding: 14px 13px 14px 13px !important;
+    }
+
+    .video-card .card-body {
+        padding: 0 !important;
+    }
+
+    h2.video-title {
+        padding: 0 !important;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 26px;
+        letter-spacing: -0.2px;
+        margin-right: 50px;
+        margin-bottom: 15px;
+    }
+
+    h2.video-title + p {
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: -0.2px;
+    }
+
+    .no-notifications {
+        padding-left: 16px;
+        margin-bottom: 18px;
+        line-height: 22px;
+    }
+
+    .mini-body > a > i {
+        min-width: 50px;
+        margin-right: 13px;
+    }
+    .mini-body > a {
+        font-weight: 500;
+        margin-right: 41px;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: -0.4px;
+    }
+
+     .alert {
+        padding: 10px 11px 10px 43px;
+        font-size: 13px;
+        line-height: 112%;
+        letter-spacing: -0.2px;
+        margin-bottom: 0;
+    }
+    .alert-icon {
+        position: absolute;
+        top: 17px;
+        left: 12px;
+    }
+
+    .std-card.dashboard .title {
+        padding: 20px 17px 0px 17px;
+        margin-bottom: 30px;
+    }
+    .std-card.dashboard .title h3 {
+        font-size: 18px;
+        line-height: 18px;
+        letter-spacing: -0.2px;
+    }
+    .std-card.dashboard .title p {
+        font-size: 14px;
+        line-height: 18px;
+        letter-spacing: -0.2px;
+        margin: 0;
+    }
+
+    .std-card.dashboard .mini-card {
+        
+    }
+    .std-card.dashboard .title {
+        padding-left: 17px;
+        padding-top: 5px;
+        margin-bottom: 20px;
+    }
+    .std-card.dashboard .mini-card > div {
+        padding: 18px 9px 15px 12px;
+    }
+    .std-card.dashboard .mini-card.requests > div::before,
+    .std-card.dashboard .mini-card.projects > div::before {
+        left: 12px;
+    }
+    .std-card.dashboard .mini-card > div > h3 {
+        font-size: 18px;
+    }
+    .std-card.dashboard .mini-card > div > p {
+        height: 32px;
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 45px;
+    }
+    .std-card.dashboard .mini-card > div > strong {
+        padding-left: 50px;
+        font-size: 32px;
+        position: relative;
+        top: -7px;
+    }
+}
+
+ @media (max-width: 430px) {
+        .std-card.dashboard .mini-card > div > strong {
+        
+        }
+    }
 </style>
