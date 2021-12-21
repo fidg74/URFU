@@ -1,180 +1,359 @@
 <template>
-    <div v-collapse-buttons class="buttons-wrapper">
-        <b-overlay :show="isPassportApproveLoading" spinner-small spinner-variant="primary" rounded="sm" opacity="0.6" class="d-inline-block">
-            <b-button v-if="buttons.indexOf('accept') > -1" @click="sendReviewResult('accept')" variant="primary" >
-                {{  {
-                    'ACPT': 'Утвердить паспорт',
-                    'ACUV': 'Принять в редакции Университета',
-                    'ACPV': 'Принять в редакции Заказчика',
-                    }[project.available_actions.accept]
-                }}
+    <div>
+        <div class="mobile" style="width: 222px;" v-bind:scrActBtnWidth="scrActBtnWidth" v-if="scrActBtnWidth === 320">
+            <b-overlay :show="isPassportApproveLoading" spinner-small spinner-variant="primary" rounded="sm" opacity="0.6" class="d-inline-block">
+                <b-button v-if="buttons.indexOf('accept') > -1" @click="sendReviewResult('accept')" variant="primary" >
+                    {{  {
+                        'ACPT': 'Утвердить паспорт',
+                        'ACUV': 'Принять в редакции Университета',
+                        'ACPV': 'Принять в редакции Заказчика',
+                        }[project.available_actions.accept]
+                    }}
+                </b-button>
+            </b-overlay>
+            
+            <b-button @click="openReviewResult" variant="primary" v-if="buttons.indexOf('review') > -1">
+                {{ project.available_actions.review == "RVPA" ? "Отправить на согласование Заказчику" : "Отправить на согласование в Университет" }}
             </b-button>
-        </b-overlay>
-        
-        <b-button @click="openReviewResult" variant="primary" v-if="buttons.indexOf('review') > -1">
-            {{ project.available_actions.review == "RVPA" ? "Отправить на согласование Заказчику" : "Отправить на согласование в Университет" }}
-        </b-button>
 
-        <b-button v-if="buttons.indexOf('approve') > -1" @click="openApproveModal(true)">
-            {{ textFromAbbr(currentProgram.available_actions.approve) }}
-        </b-button>
+            <b-button v-if="buttons.indexOf('approve') > -1" @click="openApproveModal(true)">
+                {{ textFromAbbr(currentProgram.available_actions.approve) }}
+            </b-button>
 
-        <b-button v-if="buttons.indexOf('decline') > -1" @click="openApproveModal(false)">
-            Отправить на доработку
-        </b-button>
+            <b-button v-if="buttons.indexOf('decline') > -1" @click="openApproveModal(false)">
+                Отправить на доработку
+            </b-button>
 
-        <CuratorSelect
-            v-if="buttons.indexOf('assign_curator') > -1"
-            variant="secondary"
-            title="Назначить куратора"
-            @input="
-                (curatorId) => {
-                    $store.dispatch('project/assignCurator', {
-                        id: project.id,
-                        params: {
-                            program: myProgram.program.id,
-                            curator: curatorId,
-                        },
-                    }).then(data => {
-                        this.$store.dispatch('project/FETCH_project', { id: project.id, project: data.project })
-                        this.$store.dispatch('project/FETCH_messages', { id: project.id, messages: data.project.messages })
-                    })
-                }
-            "
-        />
+            <CuratorSelect
+                v-if="buttons.indexOf('assign_curator') > -1"
+                variant="secondary"
+                title="Назначить куратора"
+                @input="
+                    (curatorId) => {
+                        $store.dispatch('project/assignCurator', {
+                            id: project.id,
+                            params: {
+                                program: myProgram.program.id,
+                                curator: curatorId,
+                            },
+                        }).then(data => {
+                            this.$store.dispatch('project/FETCH_project', { id: project.id, project: data.project })
+                            this.$store.dispatch('project/FETCH_messages', { id: project.id, messages: data.project.messages })
+                        })
+                    }
+                "
+            />
 
-        <CuratorSelect
-            v-if="buttons.indexOf('change_curator') > -1"
-            btnClass="btn_flat"
-            variant="secondary"
-            title="Сменить куратора"
-            @input="
-                (curator) => {
-                    $store.dispatch('project/changeCurator', {
-                        id: project.id,
-                        params: {
-                            program: myProgram.program.id,
-                            curator: curator,
-                        },
-                    });
-                }
-            "
-        />
+            <CuratorSelect
+                v-if="buttons.indexOf('change_curator') > -1"
+                btnClass="btn_flat"
+                variant="secondary"
+                title="Сменить куратора"
+                @input="
+                    (curator) => {
+                        $store.dispatch('project/changeCurator', {
+                            id: project.id,
+                            params: {
+                                program: myProgram.program.id,
+                                curator: curator,
+                            },
+                        });
+                    }
+                "
+            />
 
-        <b-button v-if="buttons.indexOf('edit') > -1" @click="editPassport()">Редактировать</b-button>
-        <!-- Кнопка "Редактировать" партнера (устарела) -->
-        <!--<b-button v-if="partnerCanEdit" @click="editPassport()">Редактировать</b-button>-->
+            <b-button v-if="buttons.indexOf('edit') > -1" @click="editPassport()">Редактировать</b-button>
+            <!-- Кнопка "Редактировать" партнера (устарела) -->
+            <!--<b-button v-if="partnerCanEdit" @click="editPassport()">Редактировать</b-button>-->
 
-        <b-button class="btn_flat" v-if="buttons.indexOf('add_program') > -1" v-b-modal="'assignProgramModal_' + uid">
-            Пригласить РОПа
-        </b-button>
+            <b-button class="btn_flat" v-if="buttons.indexOf('add_program') > -1" v-b-modal="'assignProgramModal_' + uid">
+                Пригласить РОПа
+            </b-button>
 
-        <b-button v-if="buttons.indexOf('export_its') > -1" @click="openExportITSModal()">
-            Выгрузить в ИТС
-        </b-button>
+            <b-button v-if="buttons.indexOf('export_its') > -1" @click="openExportITSModal()">
+                Выгрузить в ИТС
+            </b-button>
 
-        <b-button class="btn_flat" v-if="buttons.indexOf('print_pdf') > -1" @click="makePDF(project, 'passport')">
-            Сохранить в PDF
-        </b-button>
+            <b-button class="btn_flat" v-if="buttons.indexOf('print_pdf') > -1" @click="makePDF(project, 'passport')">
+                Сохранить в PDF
+            </b-button>
 
-        <!-- Модалки -->
+            <!-- Модалки -->
 
-        <b-modal size="lg" :id="'approveMessageModal_' + uid" centered hide-header>
-            <h2>        
-                {{ approve ? "Отправить на согласование" : "Отправить на доработку" }}
-            </h2>
-            <div class="h1__description">
-                {{ approve ? "Напишите комментарий для университета." : "Напишите комментарий, если у вас есть замечания." }}        
-            </div>
-            <b-form-textarea class="mt-4" v-model.trim="approveMessage" placeholder="Поле можно оставить пустым" rows="5" />
-            <template v-slot:modal-footer>
-                <b-button variant="primary" @click="approveProgram">Отправить</b-button>
-                <b-button @click="$bvModal.hide('approveMessageModal_' + uid)">Отменить</b-button>
-            </template>
-        </b-modal>
+            <b-modal size="lg" :id="'approveMessageModal_' + uid" centered hide-header>
+                <h2>        
+                    {{ approve ? "Отправить на согласование" : "Отправить на доработку" }}
+                </h2>
+                <div class="h1__description">
+                    {{ approve ? "Напишите комментарий для университета." : "Напишите комментарий, если у вас есть замечания." }}        
+                </div>
+                <b-form-textarea class="mt-4" v-model.trim="approveMessage" placeholder="Поле можно оставить пустым" rows="5" />
+                <template v-slot:modal-footer>
+                    <b-button variant="primary" @click="approveProgram">Отправить</b-button>
+                    <b-button @click="$bvModal.hide('approveMessageModal_' + uid)">Отменить</b-button>
+                </template>
+            </b-modal>
 
-        <b-modal size="lg" :id="'sendToReviewMessageModal_' + uid" centered hide-header>
-            <h2>Отправить на согласование</h2>
-            <div class="h1__description">
-                Напишите ключевые изменения, на которые необходимо обратить внимание
-            </div>
-            <b-form-textarea class="mt-4" v-model.trim="reviewMessage" placeholder="Поле можно оставить пустым" rows="5" />
-            <template v-slot:modal-footer>
-                <b-button variant="primary" @click="sendReviewResult('review')">Отправить</b-button>
-                <b-button @click="$bvModal.hide('sendToReviewMessageModal_' + uid)">Отменить</b-button>
-            </template>
-        </b-modal>
+            <b-modal size="lg" :id="'sendToReviewMessageModal_' + uid" centered hide-header>
+                <h2>Отправить на согласование</h2>
+                <div class="h1__description">
+                    Напишите ключевые изменения, на которые необходимо обратить внимание
+                </div>
+                <b-form-textarea class="mt-4" v-model.trim="reviewMessage" placeholder="Поле можно оставить пустым" rows="5" />
+                <template v-slot:modal-footer>
+                    <b-button variant="primary" @click="sendReviewResult('review')">Отправить</b-button>
+                    <b-button @click="$bvModal.hide('sendToReviewMessageModal_' + uid)">Отменить</b-button>
+                </template>
+            </b-modal>
 
-        <b-modal :id="'assignProgramModal_' + uid" centered title="Добавить образовательную программу">
-            <b-form-group>
-                <ProgramSelect v-model="assignProgramId" 
-                    :ignorePrograms="project.programs.filter(prog => prog.rop_participation_status !== null).map(prog => prog.program.id)" />
-            </b-form-group>
-            <b-form-group label="Комментарий">
-                <b-form-textarea v-model="assignProgramComment" placeholder="Напишите дополнительному руководителю полезные детали проекта" />
-            </b-form-group>
-            <template v-slot:modal-footer>
-                <b-button variant="primary" :disabled="!assignProgramId" @click="assignProgram">Добавить</b-button>
-            </template>
-        </b-modal>
+            <b-modal :id="'assignProgramModal_' + uid" centered title="Добавить образовательную программу">
+                <b-form-group>
+                    <ProgramSelect v-model="assignProgramId" 
+                        :ignorePrograms="project.programs.filter(prog => prog.rop_participation_status !== null).map(prog => prog.program.id)" />
+                </b-form-group>
+                <b-form-group label="Комментарий">
+                    <b-form-textarea v-model="assignProgramComment" placeholder="Напишите дополнительному руководителю полезные детали проекта" />
+                </b-form-group>
+                <template v-slot:modal-footer>
+                    <b-button variant="primary" :disabled="!assignProgramId" @click="assignProgram">Добавить</b-button>
+                </template>
+            </b-modal>
 
-        <b-modal :id="'passportBlocked_' + uid" centered title="Паспорт недоступен для редактирования" hide-footer>
-            <p>
-                Паспорт открыт для редактирования пользователем
-                <span v-if="blockData && blockData.user">
-                    <strong>{{ blockData.user.last_name }} {{ blockData.user.first_name }}
-                        {{ blockData.user.middle_name }}</strong>
-                    (<a :href="'mailto:' + blockData.user.email">{{ blockData.user.email }}</a>)
-                </span>
-            </p>
-        </b-modal>
-
-        <b-modal :id="'exportITSModal_' + uid" centered title="Выгрузка в ИТС" content-class="modal-export" size="lg">
-            <p class="subtitle">Статус выгрузки образовательных программ паспорта</p>
-            <b-overlay :show="isExportLoading" rounded="sm" spinner-variant="primary" style="min-height:80px">
-                <p v-for="program of programsAfterExport" :key="program.id" class="program-status">
-                    <span class="program"><span>{{ program.program.uid }}</span> {{ program.program.name }}</span>
-                    <span v-if="export_programs[program.id] && !export_programs[program.id].error" class="result good">
-                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <ellipse cx="8.00616" cy="8" rx="8.0064" ry="8" fill="#44A52C"/>
-                            <path d="M4.92676 8.61536L7.39027 10.4615L11.0855 5.53844" stroke="white" stroke-width="1.5"
-                                stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>
-                            Выгружено {{ formatDateTime(program.published) }}
-                        </span>
-                    </span>
-                    <span v-else-if="export_programs[program.id] && export_programs[program.id].error" class="result bad">
-                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8.39331" cy="8" r="8" fill="#F5222D"/>
-                            <path d="M8.39331 3.64019V8.47049" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M8.39331 11.6305V7.27655" stroke="white" stroke-width="1.5" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-dasharray="0.01 4.5"/>
-                        </svg>
-                        <span v-if="export_programs[program.id].message &&
-                            (export_programs[program.id].message == 'Не создана проектная группа' ||
-                            export_programs[program.id].message == 'Проект с таким id уже существует')">
-                            Ошибка выгрузки. {{ export_programs[program.id].message }}
-                        </span>
-                        <span v-else>
-                            Ошибка выгрузки. Ответ ИТС: {{ export_programs[program.id].message }}<br>
-                            Вы можете обратиться в&nbsp;техническую поддержку университета
-                            по&nbsp;телефону (343)&nbsp;227-20-70
-                        </span>
+            <b-modal :id="'passportBlocked_' + uid" centered title="Паспорт недоступен для редактирования" hide-footer>
+                <p>
+                    Паспорт открыт для редактирования пользователем
+                    <span v-if="blockData && blockData.user">
+                        <strong>{{ blockData.user.last_name }} {{ blockData.user.first_name }}
+                            {{ blockData.user.middle_name }}</strong>
+                        (<a :href="'mailto:' + blockData.user.email">{{ blockData.user.email }}</a>)
                     </span>
                 </p>
-                
-            </b-overlay>
-            <p v-if="someExportError" class="hint">
-                Пожалуйста, устраните ошибки и выгрузите паспорт повторно.
-            </p>
-            <template v-slot:modal-footer>
-                <b-button @click="$bvModal.hide('exportITSModal_' + uid)">Закрыть</b-button>
-            </template>
-        </b-modal>
+            </b-modal>
 
-        <!-- Конец модалок -->
-    </div>  
+            <b-modal :id="'exportITSModal_' + uid" centered title="Выгрузка в ИТС" content-class="modal-export" size="lg">
+                <p class="subtitle">Статус выгрузки образовательных программ паспорта</p>
+                <b-overlay :show="isExportLoading" rounded="sm" spinner-variant="primary" style="min-height:80px">
+                    <p v-for="program of programsAfterExport" :key="program.id" class="program-status">
+                        <span class="program"><span>{{ program.program.uid }}</span> {{ program.program.name }}</span>
+                        <span v-if="export_programs[program.id] && !export_programs[program.id].error" class="result good">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="8.00616" cy="8" rx="8.0064" ry="8" fill="#44A52C"/>
+                                <path d="M4.92676 8.61536L7.39027 10.4615L11.0855 5.53844" stroke="white" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>
+                                Выгружено {{ formatDateTime(program.published) }}
+                            </span>
+                        </span>
+                        <span v-else-if="export_programs[program.id] && export_programs[program.id].error" class="result bad">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="8.39331" cy="8" r="8" fill="#F5222D"/>
+                                <path d="M8.39331 3.64019V8.47049" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M8.39331 11.6305V7.27655" stroke="white" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-dasharray="0.01 4.5"/>
+                            </svg>
+                            <span v-if="export_programs[program.id].message &&
+                                (export_programs[program.id].message == 'Не создана проектная группа' ||
+                                export_programs[program.id].message == 'Проект с таким id уже существует')">
+                                Ошибка выгрузки. {{ export_programs[program.id].message }}
+                            </span>
+                            <span v-else>
+                                Ошибка выгрузки. Ответ ИТС: {{ export_programs[program.id].message }}<br>
+                                Вы можете обратиться в&nbsp;техническую поддержку университета
+                                по&nbsp;телефону (343)&nbsp;227-20-70
+                            </span>
+                        </span>
+                    </p>
+                    
+                </b-overlay>
+                <p v-if="someExportError" class="hint">
+                    Пожалуйста, устраните ошибки и выгрузите паспорт повторно.
+                </p>
+                <template v-slot:modal-footer>
+                    <b-button @click="$bvModal.hide('exportITSModal_' + uid)">Закрыть</b-button>
+                </template>
+            </b-modal>
+
+            <!-- Конец модалок -->
+        </div>
+        <div v-collapse-buttons class="buttons-wrapper" v-bind:scrActBtnWidth="scrActBtnWidth" v-if="scrActBtnWidth !== 320">
+            <b-overlay :show="isPassportApproveLoading" spinner-small spinner-variant="primary" rounded="sm" opacity="0.6" class="d-inline-block">
+                <b-button v-if="buttons.indexOf('accept') > -1" @click="sendReviewResult('accept')" variant="primary" >
+                    {{  {
+                        'ACPT': 'Утвердить паспорт',
+                        'ACUV': 'Принять в редакции Университета',
+                        'ACPV': 'Принять в редакции Заказчика',
+                        }[project.available_actions.accept]
+                    }}
+                </b-button>
+            </b-overlay>
+            
+            <b-button @click="openReviewResult" variant="primary" v-if="buttons.indexOf('review') > -1">
+                {{ project.available_actions.review == "RVPA" ? "Отправить на согласование Заказчику" : "Отправить на согласование в Университет" }}
+            </b-button>
+
+            <b-button v-if="buttons.indexOf('approve') > -1" @click="openApproveModal(true)">
+                {{ textFromAbbr(currentProgram.available_actions.approve) }}
+            </b-button>
+
+            <b-button v-if="buttons.indexOf('decline') > -1" @click="openApproveModal(false)">
+                Отправить на доработку
+            </b-button>
+
+            <CuratorSelect
+                v-if="buttons.indexOf('assign_curator') > -1"
+                variant="secondary"
+                title="Назначить куратора"
+                @input="
+                    (curatorId) => {
+                        $store.dispatch('project/assignCurator', {
+                            id: project.id,
+                            params: {
+                                program: myProgram.program.id,
+                                curator: curatorId,
+                            },
+                        }).then(data => {
+                            this.$store.dispatch('project/FETCH_project', { id: project.id, project: data.project })
+                            this.$store.dispatch('project/FETCH_messages', { id: project.id, messages: data.project.messages })
+                        })
+                    }
+                "
+            />
+
+            <CuratorSelect
+                v-if="buttons.indexOf('change_curator') > -1"
+                btnClass="btn_flat"
+                variant="secondary"
+                title="Сменить куратора"
+                @input="
+                    (curator) => {
+                        $store.dispatch('project/changeCurator', {
+                            id: project.id,
+                            params: {
+                                program: myProgram.program.id,
+                                curator: curator,
+                            },
+                        });
+                    }
+                "
+            />
+
+            <b-button v-if="buttons.indexOf('edit') > -1" @click="editPassport()">Редактировать</b-button>
+            <!-- Кнопка "Редактировать" партнера (устарела) -->
+            <!--<b-button v-if="partnerCanEdit" @click="editPassport()">Редактировать</b-button>-->
+
+            <b-button class="btn_flat" v-if="buttons.indexOf('add_program') > -1" v-b-modal="'assignProgramModal_' + uid">
+                Пригласить РОПа
+            </b-button>
+
+            <b-button v-if="buttons.indexOf('export_its') > -1" @click="openExportITSModal()">
+                Выгрузить в ИТС
+            </b-button>
+
+            <b-button class="btn_flat" v-if="buttons.indexOf('print_pdf') > -1" @click="makePDF(project, 'passport')">
+                Сохранить в PDF
+            </b-button>
+
+            <!-- Модалки -->
+
+            <b-modal size="lg" :id="'approveMessageModal_' + uid" centered hide-header>
+                <h2>        
+                    {{ approve ? "Отправить на согласование" : "Отправить на доработку" }}
+                </h2>
+                <div class="h1__description">
+                    {{ approve ? "Напишите комментарий для университета." : "Напишите комментарий, если у вас есть замечания." }}        
+                </div>
+                <b-form-textarea class="mt-4" v-model.trim="approveMessage" placeholder="Поле можно оставить пустым" rows="5" />
+                <template v-slot:modal-footer>
+                    <b-button variant="primary" @click="approveProgram">Отправить</b-button>
+                    <b-button @click="$bvModal.hide('approveMessageModal_' + uid)">Отменить</b-button>
+                </template>
+            </b-modal>
+
+            <b-modal size="lg" :id="'sendToReviewMessageModal_' + uid" centered hide-header>
+                <h2>Отправить на согласование</h2>
+                <div class="h1__description">
+                    Напишите ключевые изменения, на которые необходимо обратить внимание
+                </div>
+                <b-form-textarea class="mt-4" v-model.trim="reviewMessage" placeholder="Поле можно оставить пустым" rows="5" />
+                <template v-slot:modal-footer>
+                    <b-button variant="primary" @click="sendReviewResult('review')">Отправить</b-button>
+                    <b-button @click="$bvModal.hide('sendToReviewMessageModal_' + uid)">Отменить</b-button>
+                </template>
+            </b-modal>
+
+            <b-modal :id="'assignProgramModal_' + uid" centered title="Добавить образовательную программу">
+                <b-form-group>
+                    <ProgramSelect v-model="assignProgramId" 
+                        :ignorePrograms="project.programs.filter(prog => prog.rop_participation_status !== null).map(prog => prog.program.id)" />
+                </b-form-group>
+                <b-form-group label="Комментарий">
+                    <b-form-textarea v-model="assignProgramComment" placeholder="Напишите дополнительному руководителю полезные детали проекта" />
+                </b-form-group>
+                <template v-slot:modal-footer>
+                    <b-button variant="primary" :disabled="!assignProgramId" @click="assignProgram">Добавить</b-button>
+                </template>
+            </b-modal>
+
+            <b-modal :id="'passportBlocked_' + uid" centered title="Паспорт недоступен для редактирования" hide-footer>
+                <p>
+                    Паспорт открыт для редактирования пользователем
+                    <span v-if="blockData && blockData.user">
+                        <strong>{{ blockData.user.last_name }} {{ blockData.user.first_name }}
+                            {{ blockData.user.middle_name }}</strong>
+                        (<a :href="'mailto:' + blockData.user.email">{{ blockData.user.email }}</a>)
+                    </span>
+                </p>
+            </b-modal>
+
+            <b-modal :id="'exportITSModal_' + uid" centered title="Выгрузка в ИТС" content-class="modal-export" size="lg">
+                <p class="subtitle">Статус выгрузки образовательных программ паспорта</p>
+                <b-overlay :show="isExportLoading" rounded="sm" spinner-variant="primary" style="min-height:80px">
+                    <p v-for="program of programsAfterExport" :key="program.id" class="program-status">
+                        <span class="program"><span>{{ program.program.uid }}</span> {{ program.program.name }}</span>
+                        <span v-if="export_programs[program.id] && !export_programs[program.id].error" class="result good">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <ellipse cx="8.00616" cy="8" rx="8.0064" ry="8" fill="#44A52C"/>
+                                <path d="M4.92676 8.61536L7.39027 10.4615L11.0855 5.53844" stroke="white" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>
+                                Выгружено {{ formatDateTime(program.published) }}
+                            </span>
+                        </span>
+                        <span v-else-if="export_programs[program.id] && export_programs[program.id].error" class="result bad">
+                            <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="8.39331" cy="8" r="8" fill="#F5222D"/>
+                                <path d="M8.39331 3.64019V8.47049" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M8.39331 11.6305V7.27655" stroke="white" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" stroke-dasharray="0.01 4.5"/>
+                            </svg>
+                            <span v-if="export_programs[program.id].message &&
+                                (export_programs[program.id].message == 'Не создана проектная группа' ||
+                                export_programs[program.id].message == 'Проект с таким id уже существует')">
+                                Ошибка выгрузки. {{ export_programs[program.id].message }}
+                            </span>
+                            <span v-else>
+                                Ошибка выгрузки. Ответ ИТС: {{ export_programs[program.id].message }}<br>
+                                Вы можете обратиться в&nbsp;техническую поддержку университета
+                                по&nbsp;телефону (343)&nbsp;227-20-70
+                            </span>
+                        </span>
+                    </p>
+                    
+                </b-overlay>
+                <p v-if="someExportError" class="hint">
+                    Пожалуйста, устраните ошибки и выгрузите паспорт повторно.
+                </p>
+                <template v-slot:modal-footer>
+                    <b-button @click="$bvModal.hide('exportITSModal_' + uid)">Закрыть</b-button>
+                </template>
+            </b-modal>
+
+            <!-- Конец модалок -->
+        </div>
+    </div>
+      
 </template>
 
 <script>
@@ -210,6 +389,7 @@ export default {
     },
     data() {
         return {
+            scrActBtnWidth: 0,
             uid: '',
             approve: null,
             approveMessage: null,
@@ -224,8 +404,13 @@ export default {
     },
     created() {
         this.uid = makeUID(3)
+        window.addEventListener('resize', this.updScrActBtnWidth);
+        this.updScrActBtnWidth();
     },
     methods: {
+        updScrActBtnWidth(){
+            this.scrActBtnWidth = window.innerWidth;
+        },
         makePDF,
         formatDateTime: date => format(date, 'DD.MM.YYYY HH:mm'),
         textFromAbbr: abbr => mapAbbr[abbr],
@@ -467,5 +652,16 @@ export default {
     font-size: 16px;
     line-height: 20px;
     letter-spacing: -0.2px;
+}
+
+@media (max-width: 575px){
+    .mobile>*{
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+
+    .mobile{
+        text-align: center;
+    }
 }
 </style>

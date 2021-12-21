@@ -299,4 +299,28 @@ export default {
 .comment.comment_open > .popup > .comment__footer > .buttons {
     margin-top: 12px;
 }
+
+@media(max-width: 575px){
+    .comment > .popup {
+    width: 320px;
+    position: absolute;
+    right: -710%;
+    top: 1.5rem;
+    text-align: left;
+    box-shadow: 0px 8px 24px rgba(0,0,0,0.18);
+    background: #fff;
+    z-index: 100;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    color: #212529;
+    line-height: 20px;
+    font-size: 1rem;
+    max-height: 0;
+    min-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateX(10px);
+    transition: transform 0.2s, opacity 0.25s, max-height 0.15s;
+    }
+}
 </style>

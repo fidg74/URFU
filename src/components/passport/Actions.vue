@@ -1,18 +1,36 @@
 <template>
-    <div v-pin-bottom class="pin-bottom_btns">
-        <b-container class="pin-bottom__container">
-            <b-row>
-                <b-col cols="9">
-                    <b-card class="card_content">
-                        <span
-                            v-b-tooltip
-                            :title="meIsRROP && !MCUR ? 'Главный куратор не назначен' : ''">
-                        </span>
-                        <ActButtons :buttons="buttonsByOrder" @errors="errors => $emit('errors', errors)" />
-                    </b-card>
-                </b-col>
-            </b-row>
-        </b-container>
+    <div>
+        <div v-pin-bottom class="pin-bottom_btns" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth !== 320">
+            <b-container class="pin-bottom__container">
+                <b-row>
+                    <b-col cols="9">
+                        <b-card class="card_content">
+                            <span
+                                v-b-tooltip
+                                :title="meIsRROP && !MCUR ? 'Главный куратор не назначен' : ''">
+                            </span>
+                            <ActButtons :buttons="buttonsByOrder" @errors="errors => $emit('errors', errors)" />
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
+
+        <div class="mt-4 mb-4" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth === 320">
+            <b-container class="pin-bottom__container">
+                <b-row>
+                    <b-col cols="13" style="margin-left:-1%;">
+                        <b-card class="card_content">
+                            <span
+                                v-b-tooltip
+                                :title="meIsRROP && !MCUR ? 'Главный куратор не назначен' : ''">
+                            </span>
+                            <ActButtons :buttons="buttonsByOrder" @errors="errors => $emit('errors', errors)" />
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </div>
     </div>
 </template>
 
@@ -27,10 +45,18 @@ export default {
     },
     data() {
         return {
+            scrActWidth: 0,
             approve: null,
         };
     },
+    created() {
+        window.addEventListener('resize', this.updScrActWidth);
+        this.updScrActWidth();
+    },
     methods: {
+        updScrActWidth(){
+            this.scrActWidth = window.innerWidth;
+        },
     },
     computed: {
         ...mapState({
