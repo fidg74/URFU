@@ -893,7 +893,7 @@ export default {
         margin-top: 24px;
     }
 
-    @media (max-width: 575px) {
+    @media (max-width: 576px) {
         .btn-mobile{
             max-height: 60px;
             padding: 0;

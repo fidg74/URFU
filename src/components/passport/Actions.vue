@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-pin-bottom class="pin-bottom_btns" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth !== 320">
+        <div v-pin-bottom class="pin-bottom_btns" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth > 576">
             <b-container class="pin-bottom__container">
                 <b-row>
                     <b-col cols="9">
@@ -16,7 +16,7 @@
             </b-container>
         </div>
 
-        <div class="mt-4 mb-4" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth === 320">
+        <div class="mt-4 mb-4" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth <= 576">
             <b-container class="pin-bottom__container">
                 <b-row>
                     <b-col cols="13" style="margin-left:-1%;">

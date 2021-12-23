@@ -300,7 +300,7 @@ export default {
     margin-top: 12px;
 }
 
-@media(max-width: 575px){
+@media(max-width: 576px){
     .comment > .popup {
     width: 320px;
     position: absolute;

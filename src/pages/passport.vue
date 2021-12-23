@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div style="margin-top: 26px" class="project-status__wrap project-status__progress" v-bind:scrWidth="scrWidth" v-if="scrWidth === 320">
+            <div style="margin-top: 26px" class="project-status__wrap project-status__progress" v-bind:scrWidth="scrWidth" v-if="scrWidth <= 576">
                 
                 <div class="text-subtitle">Прогресс паспорта
                     <svg @click="showStatus = !showStatus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -72,7 +72,7 @@
             </div>
 
             <b-row class="mt-4">
-                <b-col cols="12" v-bind:scrWidth="scrWidth" v-if="scrWidth === 320">
+                <b-col cols="12" v-bind:scrWidth="scrWidth" v-if="scrWidth <= 576">
                     <b-alert show variant="primary" class="alert_icon alert_horizontal" v-if="project.request_status === 'PSPT' && meIsPartner">
                         <b-icon-info-circle-fill />
                         Паспорт сформирован Университетом на&nbsp;основе заявки и&nbsp;некоторые поля могли быть дополнены и&nbsp;изменены
@@ -522,7 +522,7 @@
 
                     <Actions @errors="setErrors" />
                 </b-col>
-                <b-col cols="9" v-bind:scrWidth="scrWidth" v-if="scrWidth !== 320">
+                <b-col cols="9" v-bind:scrWidth="scrWidth" v-if="scrWidth > 576">
                     <b-alert show variant="primary" class="alert_icon alert_horizontal" v-if="project.request_status === 'PSPT' && meIsPartner">
                         <b-icon-info-circle-fill />
                         Паспорт сформирован Университетом на&nbsp;основе заявки и&nbsp;некоторые поля могли быть дополнены и&nbsp;изменены
@@ -895,14 +895,16 @@
                 
             </b-row>
 
-            <!-- <b-toast
-                v-if="canComment"
+            <b-toast
+                v-bind:scrWidth="scrWidth"
+                v-if="canComment && scrWidth > 576"
                 id="informer-make-comments"
                 solid
                 :no-auto-hide="true"
                 toaster="b-toaster-bottom-left"
                 toast-class="passport-help"
-                title="test">
+                title="test"
+                >
                 <div class="icon blue">
                     <svg width="30" height="28" viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M24.8173 20.3951C24.4407 20.7728 24.2521 21.2988 24.3029 21.8298C24.4169 23.0198 24.6793 24.2582 25.0163 25.4086C22.5191 24.8315 20.994 24.162 20.3008 23.8107C19.9073 23.6112 19.454 23.5642 19.0279 23.6784C17.8502 23.9942 16.5951 24.1653 15.2896 24.1653C8.13666 24.1653 2.75814 19.1392 2.75814 13.4241C2.75814 7.70889 8.13666 2.68279 15.2896 2.68279C22.4426 2.68279 27.8211 7.70889 27.8211 13.4241C27.8211 16.0523 26.716 18.4911 24.8173 20.3951ZM25.6999 27.3858C25.712 27.3882 25.724 27.3906 25.7361 27.393C25.9005 27.4254 26.0681 27.4573 26.2389 27.4885C26.4785 27.5324 26.7244 27.5751 26.9766 27.6164C27.3329 27.6747 27.6056 27.302 27.4649 26.9696C27.373 26.7524 27.2823 26.5247 27.194 26.2887C27.1379 26.1387 27.0827 25.9854 27.0288 25.8292C27.0265 25.8224 27.0241 25.8157 27.0218 25.809C26.5783 24.5205 26.2171 23.0395 26.085 21.6592C28.2811 19.4569 29.6113 16.5764 29.6113 13.4241C29.6113 6.50312 23.1993 0.892578 15.2896 0.892578C7.37997 0.892578 0.96793 6.50312 0.96793 13.4241C0.96793 20.345 7.37997 25.9556 15.2896 25.9556C16.7518 25.9556 18.1628 25.7638 19.4915 25.4075C20.4215 25.8788 22.4248 26.7366 25.6999 27.3858Z" fill="white"/>
@@ -920,7 +922,8 @@
                 </div>
             </b-toast>
             <b-toast
-                v-if="informerNewComments"
+                v-bind:scrWidth="scrWidth"
+                v-if="informerNewComments && scrWidth > 576"
                 id="informer-new-comments"
                 solid
                 :no-auto-hide="true"
@@ -941,7 +944,7 @@
                         <p>Посмотрите в разделах паспорта.</p>
                     </div>
                 </div>
-            </b-toast> -->
+            </b-toast>
         </template>
 
         <div v-if="errorProject">
