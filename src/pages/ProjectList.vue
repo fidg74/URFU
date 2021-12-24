@@ -320,6 +320,9 @@
           </div>
 
           <div class="mobile-filter__buttons d-sm-none">
+            <b-button class="btn_full p-2" variant="primary" @click="filterMobileShow = false" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
+              Применить {{ numActiveFilters }}
+            </b-button>
             <b-button class="btn_full p-2" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
               Очистить фильтры
             </b-button>

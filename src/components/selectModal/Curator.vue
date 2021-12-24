@@ -185,6 +185,7 @@ export default {
 
         /deep/ .choose-modal .modal-body {
             padding: 0 13px;
+            flex: none;
         }
 
         /deep/ .choose-modal .choose-back {
