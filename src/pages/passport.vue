@@ -1,5 +1,5 @@
 <template>
-    <b-container class="passport-page">
+    <b-container class="passport-page" style="background: #F1F4FA;">
         <b-button variant="primary" class="btn_flat mb-3" to="/projects">
             <i class="fas fa-arrow-left" />
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left mb-1" viewBox="0 0 16 16">
@@ -33,7 +33,24 @@
                     <svg @click="showStatus = !showStatus" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                     </svg>
-                    <transition name="fade">
+                    <div v-if="project.request_status === 'PSST' && !showStatus" :class="{ 'project-status': 1, 'project-status_active': project.request_status === 'PSST' }">
+                            <div class="project-status__num">1</div>
+                            <div class="project-status__title">Формирование паспорта</div>
+                        </div>
+                        <div v-if="project.request_status === 'PSPT' && !showStatus" :class="{ 'project-status': 1, 'project-status_active': project.request_status === 'PSPT' }">
+                            <div class="project-status__num">2</div>
+                            <div class="project-status__title">Паспорт на&nbsp;согласовании у&nbsp;партнера</div>
+                        </div>
+                        <div v-if="project.request_status === 'PSUN' && !showStatus" :class="{ 'project-status': 1, 'project-status_active': project.request_status === 'PSUN' }">
+                            <div class="project-status__num">3</div>
+                            <div class="project-status__title">Паспорт на&nbsp;согласовании у&nbsp;университета</div>
+                        </div>
+                        <div v-if="(project.request_status === 'CMPL' || project.request_status === 'PSAP') && !showStatus" :class="{ 'project-status': 1, 'project-status_active': (project.request_status === 'CMPL' || project.request_status === 'PSAP') }">
+                            <div class="project-status__num">4</div>
+                            <div class="project-status__title">Паспорт утвержден</div>
+                        </div>
+                    <transition>
+                        
                         <div v-if="showStatus">
                             <div :class="{ 'project-status': 1, 'project-status_active': project.request_status === 'PSST' }">
                                 <div class="project-status__num">1</div>
@@ -54,6 +71,14 @@
                         </div>
                     </transition>
                     
+                </div>
+
+                <div v-if="project.request_status === 'PSST'" class="mb-3 mt-3">
+                    <b-alert show variant="primary" class="alert_icon">
+                        <b-icon-info-circle-fill />
+                        {{ meIsPartner ? 'Мы&nbsp;формируем паспорт и&nbsp;отправим его на&nbsp;согласование' : 'Заполните и&nbsp;отправьте паспорт на&nbsp;согласование заказчику' }}
+                        <b class="nobr">до {{ formatDate(project.passport_deadline) }}</b>
+                    </b-alert>
                 </div>
                 
             </div>
@@ -86,13 +111,14 @@
                     <b-card class="card_content mt-0">
                         <b-badge class="fl-right ml-2" variant="primary" v-if="project.kernel && !user.isPartner">Ядерный проект</b-badge>
                         <div>
-                            <b-badge style="margin-right: 20%;" :variant="project.request_status" class="fl-right">{{ model(project.request_status) }}</b-badge>
+                            <b-badge style="" :variant="project.request_status" class="">{{ model(project.request_status) }}</b-badge>
                         </div>
-                        <h2 style="margin-top:40px;">Описание проекта
-                            <svg @click="showDescrFull = !showDescrFull" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                        <h2 class="mt-4" style="margin:0;">Описание проекта<span class="fl-right" @click="showDescrFull = !showDescrFull" style="font-size: 16px; color: #9DA7B0;">Все
+                            <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                            </svg>
-                        </h2>
+                            </svg></span>
+                            </h2>
+                        
                         
                         <transition name="fade"><div v-if="showDescrFull">
                         <h4 class="mt-5 mb-2">Полное название проекта
@@ -276,7 +302,7 @@
 
                     <b-card class="card_content" v-if="canSeePartnerPSST">
                         <h2 class="mb-5">Образовательная программа
-                            <Comment style="left:-93%; margin-top:30px;" field="semester_course" class="fl-right" hidden :project="project.id" />
+                            <Comment style="left:-93%; margin-top:25px;" field="semester_course" class="fl-right" hidden :project="project.id" />
                         </h2>
 
                         <template v-for="program of project.programs">
@@ -313,9 +339,9 @@
                             </b-col>
                             
                         </header>
-                        <header style="margin-top: -10px; margin-bottom: 20px;">
+                        <header class="mb-2">
                                 <i class="form-eye ml-5" v-b-tooltip title="Не видно заказчику" />
-                                <Comment style="left:-36%;" field="work_type_difficulty_type" :project="project.id" hidden />
+                                <Comment class="fl-right" style="left:-93%; top: 3px" field="work_type_difficulty_type" :project="project.id" hidden />
                         </header>
 
                         <template v-for="program of project.programs">
@@ -369,14 +395,14 @@
                     </b-card>
 
                     <b-card class="card_content" v-if="canSeePartnerPSST">
-                        <h2 class="mb-5">
+                        <h2 class="mb-4">
                             Требования к ролям
-                            <Comment style="left:-93%;" field="compet_roles" class="fl-right mt-2" :project="project.id" />
                         </h2>
+                        <h2 class="mb-4"><Comment style="left:-93%;" field="compet_roles" class="fl-right" :project="project.id" /></h2>
 
                         <template v-for="program of project.programs">
                             <div class="project__block" v-if="isShowProgram(program)" :key="program.id">
-                                <h4>{{ program.program.name }}</h4>
+                                <h4 style="margin-top:50px;">{{ program.program.name }}</h4>
 
                                 <div class="mb-2" v-for="(item, index) of program.compet_roles" :key="index">
                                     <div class="mb-0">
@@ -399,8 +425,8 @@
                         </header>
                         <header>
                             <b-col class="mt-1 mb-3">
-                                <i style="margin-left:35px;" class="form-eye" v-b-tooltip title="Не видно заказчику" />
-                                <Comment style="left:-43%;" field="professional_competence" :project="project.id" hidden />
+                                <i class="form-eye" style="margin-left: 35px;" v-b-tooltip title="Не видно заказчику" />
+                                <Comment class="fl-right" style="left:-97%; top: 3px;" field="professional_competence" :project="project.id" hidden />
                             </b-col>
                         </header>
 
@@ -429,14 +455,14 @@
                     </b-card>
 
                     <b-card class="card_content" v-if="canSeePartnerPSST">
-                        <h2 class="mb-5">
+                        <h2 class="mb-3">
                             Выделенные заказчиком ресурсы
-                            <Comment style="left:-93%;" field="resources" class="fl-right mt-1" :project="project.id" />
                         </h2>
+                        <h2><Comment style="left:-93%;" field="resources" class="fl-right mt-1" :project="project.id" /></h2>
 
                         <template v-for="program of project.programs">
                             <div class="project__block" v-if="isShowProgram(program)" :key="program.id">
-                                <h4>{{ program.program.name }}</h4>
+                                <h4 style="margin-top:50px;">{{ program.program.name }}</h4>
                                 <b-table
                                     v-if="program.resources.length"
                                     borderless
@@ -458,15 +484,9 @@
                         <FileDownload download :file="file" v-for="file in project.proj_files" :key="file.file_id" class="mt-4" />
                     </b-card>
 
-                    <b-col class="mt-4">
+                    <b-card class="mt-4">
                         <div>
-                            <div v-if="project.request_status === 'PSST'" class="mb-3">
-                                <b-alert show variant="primary" class="alert_icon">
-                                    <b-icon-info-circle-fill />
-                                    {{ meIsPartner ? 'Мы&nbsp;формируем паспорт и&nbsp;отправим его на&nbsp;согласование' : 'Заполните и&nbsp;отправьте паспорт на&nbsp;согласование заказчику' }}
-                                    <b class="nobr">до {{ formatDate(project.passport_deadline) }}</b>
-                                </b-alert>
-                            </div>
+                            
                             
                             <b-card class="program-choice__wrap mb-3" v-if="canSeePartnerPSST">
                                 <h4 class="mb-3">{{ isMulti ? 'Образовательные программы' : 'Образовательная программа' }}</h4>
@@ -498,13 +518,15 @@
                                 </b-button>
                             </b-card>
 
-                            <b-button variant="success" class="show-changes btn_full mb-3" @click="showHistory" style="color:#558D61; background: #31A34326; border-color: #31A34326;">История правок паспорта</b-button>
+                            
 
-                            <div class="mb-4" v-if="!meIsPartner">
+                            <div class="mb-3" v-if="!meIsPartner">
                                 <b-button varian="primary" class="btn_full m-0" @click="likePartner = !likePartner; currentProgramId = 0">
                                     {{ likePartner ? 'Обычный просмотр' : 'Паспорт для Заказчика' }}
                                 </b-button>
                             </div>
+
+                            <b-button variant="success" class="show-changes btn_full mb-4" @click="showHistory" style="color:#558D61; background: #31A34326; border-color: #31A34326;">История правок паспорта</b-button>
 
                             <div class="project-status__wrap project-status__export" v-if="iHaveUniRole && (project.request_status === 'CMPL' || project.request_status === 'PSAP')">
                                 <div class="text-subtitle export-status">Статус выгрузки в&nbsp;ИТС</div>
@@ -518,7 +540,7 @@
                                 </div>
                             </div>
                         </div>
-                    </b-col>
+                    </b-card>
 
                     <Actions @errors="setErrors" />
                 </b-col>
@@ -831,7 +853,7 @@
                             </b-col>
                             <b-col class="text-right">
                                 <i class="form-eye ml-2" v-b-tooltip title="Не видно заказчику" />
-                                <Comment field="professional_competence" :project="project.id" hidden />
+                                <Comment field="professional_competence"  :project="project.id" hidden />
                             </b-col>
                         </header>
 

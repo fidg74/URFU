@@ -1,5 +1,5 @@
 <template>
-    <b-container>
+    <b-container style="background: #F1F4FA;">
         <b-button variant="primary" class="btn_flat mb-3" to="/requests">
             <i class="fas fa-arrow-left" />
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left mb-1" viewBox="0 0 16 16">
@@ -12,7 +12,7 @@
             <h1>{{ project.req_name }}</h1>
             <div class="h1__description">{{ project.uid }} от {{ formatDate(project.date) }}</div>
 
-            <div class="mt-4" v-if="project.bef_status === 'ACPT' && (myProgram || meIsPartner || user.isZP)">
+            <div class="mt-4 " v-if="project.bef_status === 'ACPT' && (myProgram || meIsPartner || user.isZP)">
                 <div class="ui-tabs">
                     <label class="ui-tabs__item active">
                         <div class="ui-tabs__label">Заявка на проект</div>
@@ -34,7 +34,7 @@
                     <b-card v-if="myLastRequestIsDeclined" class="card_content mb-4">
                         <Message :message="myLastParticipationRequest" />
                     </b-card>
-                        <div class="project-status__wrap">
+                        <div class="project-status__wrap ml-2">
                             <div class="text-subtitle">Прогресс заявки</div>
                             <div :class="{ 'project-status': 1, 'project-status_active': project.bef_status === 'DRFT' }">
                                 <div class="project-status__num">1</div>
@@ -49,12 +49,9 @@
                                 <div class="project-status__title">Ответ на&nbsp;заявку</div>
                             </div>
                         </div>
+                        
                     <b-card class="card_content mt-0">
-                        <i class="bi bi-chevron-down"></i>
-                        <b-badge class="fl-right ml-2" variant="primary" v-if="project.kernel && !user.isPartner">
-                            Ядерный проект
-                        </b-badge>
-                        <b-badge class="fl-right"
+                        <div><b-badge class="mb-3"
                             :variant="project.participation_status
                                 ? {
                                 'has_offer': 'warning',
@@ -74,9 +71,22 @@
                                     }[project.participation_status]
                                     : model(project.bef_status)
                                 }}
+                        </b-badge></div>
+                        <i class="bi bi-chevron-down"></i>
+                        <b-badge class="fl-right ml-2" variant="primary" v-if="project.kernel && !user.isPartner">
+                            Ядерный проект
                         </b-badge>
-                        <h2>Описание проекта</h2>
                         
+                        <div><h2>Описание проекта
+                            <span style="margin-left: 20%; font-size: 16px; color: #9DA7B0;">Все</span>
+                                <svg @click="showReqDescr = !showReqDescr" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                    
+                                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            
+                        </h2></div>
+                        <transition name="fade">
+                        <div v-if="showReqDescr">
                         <div>
                             <h4 class="mt-5 mb-2">Цель
                                 <svg @click="showAim = !showAim" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -124,6 +134,8 @@
             
                         <h4 class="mt-5 mb-2">Максимальное количество экземпляров проекта</h4>
                         <div v-html="project.max_copies" class="project__user-text" />
+                        </div>
+                        </transition>
                     </b-card>
 
                     <b-card class="card_content" v-if="!(!user.isPlAdmin && meIsPartner)">
@@ -234,9 +246,10 @@
                                         </Person>
                                         <Person :user="MCUR">
                                             <template #caption>
-                                                Главный куратор
+                                                <div style="width:150px;">Главный куратор</div>
                                             </template>
-                                            <CuratorSelect v-if="'assign_curator' in prg.available_actions"
+                                            
+                                            <CuratorSelect class="mt-4" v-if="'assign_curator' in prg.available_actions"
                                                 variant="secondary"
                                                 title="Назначить куратора"
                                                 @input="setCurator"
@@ -256,7 +269,7 @@
                                             <template #caption>
                                                 Куратор
                                             </template>
-                                            <CuratorSelect v-if="'assign_curator' in prg.available_actions"
+                                            <CuratorSelect class="mt-4" v-if="'assign_curator' in prg.available_actions"
                                                 variant="secondary"
                                                 title="Назначить куратора"
                                                 @input="setCurator"
@@ -355,7 +368,7 @@
                         </template>
                     </b-card>
 
-                    <b-card class="card_content" v-if="project.req_files && project.req_files.length">
+                    <b-card class="card_content mb-4" v-if="project.req_files && project.req_files.length">
                         <h2>Приложения</h2>
                         <FileDownload download :file="file" v-for="file in project.req_files" :key="file.file_id" class="mt-4" />
                     </b-card>
@@ -380,7 +393,8 @@
                         showROPForceButton
                         :projectId="project.id"
                         :projectStatus="project.request_status" />
-                    <RoleActions v-if="project && project.id == $route.params.id" />
+                    
+
                     
                     <!-- <div v-pin-bottom>
                         <b-container class="pin-bottom__container">
@@ -389,19 +403,22 @@
                                     <b-card class="card_content">
                                         <div v-collapse-buttons class="buttons-wrapper"> -->
                     <i class="bi bi-three-dots"></i>
-                    <b-container class="pin-bottom__container">
-                        <b-row>
-                            <b-card class="card-body btn-mobile" style="margin-top: 10px; border: 1px solid #ddd; text-align: center;">
-                                <div v-collapse-buttons class="buttons-wrapper">
-                                    <b-button class="btn_flat" @click="makePDF(project, 'request')">Сохранить в  PDF
-                                        <svg style="padding: 5px; background-color: #447de1; color: white; border-radius: 3px;" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                    <b-container class="" >
+                        <b-row >
+                            <b-card class="card-body btn-mobile" style="border: 1px solid #ddd; text-align: center; ">
+                                <div v-collapse-buttons class="buttons-wrapper" style=" margin-top:-5px;">
+                                    <b-button style="margin-left:30px;" class="btn_flat" @click="makePDF(project, 'request')">Сохранить в  PDF
+                                        <svg style="margin-left:70px; padding: 6px; background-color: #447de1; color: white; border-radius: 3px;" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
                                             <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
                                         </svg>
                                     </b-button>
+
                                 </div>
                             </b-card>
-                        </b-row>    
+                        </b-row>
+                            
                     </b-container>
+                    <RoleActions class="mobile-req" v-if="project && project.id == $route.params.id" />
                                             
                                         <!-- </div>
                                     </b-card>
@@ -529,6 +546,7 @@ export default {
             showRes: true,
             showCriteria: true,
             showDescription: true,
+            showReqDescr: true,
             allRolesTabItems: [
                 { label: 'Активные', value: 'active' }, 
                 { label: 'Приглашения', value: 'invite' }, 
@@ -901,6 +919,16 @@ export default {
         h1{
             font-size: 22px;
             line-height: 26px;
+        }
+        .mobile-req{
+            width: 100%;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .mobile-req>*{
+            width: 100%;
+            margin-bottom: 10px;
+            margin-right: 0;
         }
     }
 </style>

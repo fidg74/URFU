@@ -52,10 +52,10 @@
       </div>
     </div>
     <router-view v-if="hasUser && appReady" />
-    <footer class="app__footer">
+    <footer class="app__footer" style="text-align: left;">
       <b-container>
         <div>По вопросам организации проектного обучения и его сопровождения в сервисе Проектное обучение Личного кабинета партнера можно обратиться в Центр развития инженерного образования по электронной почте <a href="mailto:project@urfu.ru">project@urfu.ru</a></div>
-        <div>© ФГАОУ ВО «УрФУ имени первого Президента России Б.Н. Ельцина» 2020-2021 <a href="/files/lkp_terms_of_use.pdf" target="_blank">Пользовательское соглашение</a></div>
+        <div class="mt-4">© ФГАОУ ВО «УрФУ имени первого Президента России Б.Н. Ельцина» 2020-2021 <a href="/files/lkp_terms_of_use.pdf" target="_blank">Пользовательское соглашение</a></div>
       </b-container>
     </footer>
     <!-- <div style="position: absolute; top: 0; left: -1px; opacity: 0.3; pointer-events: none;" v-if="visibleImg">

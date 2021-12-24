@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mobile" style="width: 222px;" v-bind:scrActBtnWidth="scrActBtnWidth" v-if="scrActBtnWidth <= 576">
+        <div class="mobile" v-bind:scrActBtnWidth="scrActBtnWidth" v-if="scrActBtnWidth <= 576">
             <b-overlay :show="isPassportApproveLoading" spinner-small spinner-variant="primary" rounded="sm" opacity="0.6" class="d-inline-block">
                 <b-button v-if="buttons.indexOf('accept') > -1" @click="sendReviewResult('accept')" variant="primary" >
                     {{  {
@@ -654,10 +654,11 @@ export default {
     letter-spacing: -0.2px;
 }
 
-@media (max-width: 575px){
+@media (max-width: 576px){
     .mobile>*{
         margin-bottom: 10px;
         margin-right: 0;
+        width: 100%;
     }
 
     .mobile{
