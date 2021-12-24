@@ -1209,5 +1209,15 @@ export default {
       flex-direction: column;
       gap: 14px;
     }
+
+    .project-card__buttons .btn {
+      background: #467BE3 !important;
+      color: #fff !important;
+      font-size: 14px !important; 
+    }
+
+    .project-card__buttons .btn-plus {
+      display: none;
+    }
 }
 </style>
