@@ -721,10 +721,6 @@ export default {
 <style>
     #app {
         background: #F1F4FA;
-        padding-top: 100px;
-    }
-    .aside {
-        display: none;
     }
 
 

@@ -252,11 +252,11 @@ export default {
 <style>
 #app {
     background: #F1F4FA;
-    padding-top: 100px;
-    padding-bottom: 0;
+    padding-bottom: 65px;
 }
+
 .aside {
-    display: none;
+    margin-bottom: 21px
 }
 
 .std-card .card-body {
