@@ -350,8 +350,12 @@ export default {
 
     .comment.comment_open > .popup > .comment__body {
     padding: 20px;
-    max-height: none;
+    max-height: 380px;
     overflow-y: auto;
-}
+    }
+
+    .comment.comment_open > .popup > .comment__body::-webkit-scrollbar {
+        display: none;
+    }
 }
 </style>
