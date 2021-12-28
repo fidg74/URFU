@@ -1,7 +1,12 @@
 <template>
-  <b-container>
-    <b-button variant="primary" class="btn_flat mb-3" to="/requests">
-      <i class="fas fa-arrow-left" />
+  <b-container class="newRequest">
+    <b-button variant="primary" class="btn_flat mb-3 newRequest__top" to="/requests">
+      <div class="iconBack">
+      <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.16424 1.33576L1.17145 4.32855M1.17145 4.32855L4.16424 7.32134M1.17145 4.32855H10.8285" stroke="#467BE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      </div>
       <span>Все заявки</span>
     </b-button>
 
@@ -12,7 +17,24 @@
     </div>
 
     <b-row class="mt-4">
-      <b-col cols="9">
+    <b-col>
+        <div v-pin-aside class="project-status__wrap">
+          <div class="text-subtitle">Прогресс заявки</div>
+          <div class="project-status project-status_active">
+            <div class="project-status__num">1</div>
+            <div class="project-status__title">Заполнение заявки</div>
+          </div>
+          <div class="project-status">
+            <div class="project-status__num">2</div>
+            <div class="project-status__title">Рассмотрение заявки университетом</div>
+          </div>
+          <div class="project-status">
+            <div class="project-status__num">3</div>
+            <div class="project-status__title">Ответ на&nbsp;заявку</div>
+          </div>
+        </div>
+      </b-col>
+      <b-col cols="12" >
         <b-card class="card_content mt-0">
           <b-badge variant="grey" class="fl-right">Черновик</b-badge>
           <h2>Описание проекта <span class="form_required-el" /></h2>
@@ -153,7 +175,7 @@
         <div v-pin-bottom>
           <b-container class="pin-bottom__container">
             <b-row>
-              <b-col cols="9">
+              <b-col cols="12">
                 <b-card class="card_content">
                   <b-button variant="primary" @click="sendRequest">Отправить заявку</b-button>
                   <b-button @click="sendRequest('draft')">Сохранить</b-button>
@@ -169,30 +191,43 @@
             </b-row>
           </b-container>
         </div>
-
-      </b-col>
-
-      <b-col>
-        <div v-pin-aside class="project-status__wrap">
-          <div class="text-subtitle">Прогресс заявки</div>
-          <div class="project-status project-status_active">
-            <div class="project-status__num">1</div>
-            <div class="project-status__title">Заполнение заявки</div>
-          </div>
-          <div class="project-status">
-            <div class="project-status__num">2</div>
-            <div class="project-status__title">Рассмотрение заявки университетом</div>
-          </div>
-          <div class="project-status">
-            <div class="project-status__num">3</div>
-            <div class="project-status__title">Ответ на&nbsp;заявку</div>
-          </div>
-        </div>
       </b-col>
     </b-row>
 
   </b-container>
 </template>
+
+<style>
+  .newRequest {
+
+  }
+
+
+  @media (max-width: 575px) {
+    .newRequest__top {
+      display: flex;
+      align-items: center
+    }
+
+    .newRequest .iconBack {
+      margin-right: 10px;
+    }
+
+    .newRequest h1 {
+      font-size: 22px;
+    }
+
+    .newRequest .project-status__wrap {
+      max-height: auto;
+    }
+
+    .newRequest .pin-bottom {
+      padding-left: 0;
+      max-width: 100%;
+    }
+  }
+
+</style>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
