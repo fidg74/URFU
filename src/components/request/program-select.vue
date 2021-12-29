@@ -141,7 +141,7 @@
                     :custom-label="nameWithUid"
                     track-by="id"          
                     :key="progKey"
-                    :class="{error:this.error}"
+                    :class="{error:this.error, 'program-multiselect': true}"
                     :group-label="hideAllProgs ? null : 'group'"
                     :group-values="hideAllProgs ? null : 'items'"
                     :group-select="!hideAllProgs"
@@ -152,14 +152,14 @@
                             <div class="option__desc">                
                                 <div class="program_sel__checkbox program__checkbox" :class="{checked:showAllProgSelectedChkbx}"></div>
                                 <div class="option__column mr-sm-3">
-                                    <div class="option__row ml-2 opt_prog_title">
+                                    <div class="option__row ml-sm-2 opt_prog_title">
                                         <p>
                                             <span class="option__prog_uid">{{ props.option.uid }}</span>                    
                                             {{ '$groupLabel' in props.option ? props.option.$groupLabel: props.option.name }}
                                         </p>                    
                                     </div>
-                                    <div class="option__grey ml-2" v-if="!('$groupLabel' in props.option)">{{ props.option.area_human }} </div>
-                                    <div class="option__grey ml-2" v-if="!('$groupLabel' in props.option)">{{ props.option.institute_human }} </div>
+                                    <div class="option__grey ml-sm-2" v-if="!('$groupLabel' in props.option)">{{ props.option.area_human }} </div>
+                                    <div class="option__grey ml-sm-2" v-if="!('$groupLabel' in props.option)">{{ props.option.institute_human }} </div>
                                 </div>
                             </div>
                             <div class="prog_url ml-6">
@@ -870,12 +870,6 @@ export default {
         width: 60px;
     }
 
-    /* .program-select .option__title::before {
-        content: '';
-        display: inline-block;
-        width: 60px;
-    } */
-
     .program-select .option__grey {
         margin: 0;
         grid-column: 2 / 3;
@@ -898,5 +892,35 @@ export default {
     .program-select > .steps > .step > .badge.badge-secondary {
         display: none;
     }
+
+    .multiselect.program-multiselect .option__column {
+        margin-left: 0;
+    }
+
+    .multiselect.program-multiselect p {
+        padding: 0;
+        color: #000;
+        font-weight: normal;
+    }
+
+    .multiselect.program-multiselect .opt_prog_title {
+        margin-bottom: 5px;
+    }
+
+    .multiselect.program-multiselect .option__grey {
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: normal;
+    }
+
+    .multiselect.program-multiselect .prog_url {
+        margin-left: 26px;
+        margin-top: 5px;
+    }
+
+    /* .multiselect.program-multiselect .multiselect__content-wrapper {
+        min-height: 430px;
+    } */
+
 }
 </style>
