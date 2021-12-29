@@ -9,7 +9,24 @@
             При рассмотрении вашей заявки мы дополним ваш выбор, если для выполнения
             проекта больше подходят другие программы.      
         </p>   
+
+        <b-form-checkbox 
+            switch
+            v-model="onlyMyOwnProgs"
+            v-if="user.isRop"
+            class="prog_select__only_own d-sm-none"
+            size="lg"
+        >Только мои программы</b-form-checkbox>
+
         <div class="steps">
+            <div class="steps__arrow steps__arrow--prev d-sm-none"
+                v-if="tab !== 'institute'"
+                @click="go(prevTab)" 
+            >
+                <svg width="18" height="8" viewBox="0 0 18 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.99237 0.835757L0.999577 3.82855M0.999577 3.82855L3.99237 6.82134M0.999577 3.82855H16.6567" stroke="#467BE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <div
                 class="step"
                 :class="{ active: tab == 'institute' }"
@@ -37,12 +54,20 @@
             >
                 Образовательная программа
                 <b-badge v-if="program.length">{{ program.length }}</b-badge>
-            </div>      
+            </div>    
+            <div class="steps__arrow steps__arrow--next d-sm-none"
+                v-if="tab !== 'program'"
+                @click="go(nextTab)" 
+            >
+                <svg width="18" height="8" viewBox="0 0 18 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.6639 0.835757L16.6567 3.82855M16.6567 3.82855L13.6639 6.82134M16.6567 3.82855H0.999577" stroke="#467BE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>  
             <b-form-checkbox 
                 switch
                 v-model="onlyMyOwnProgs"
                 v-if="user.isRop"
-                class="prog_select__only_own"
+                class="prog_select__only_own d-none d-sm-block"
                 size="lg"
             >Только мои программы</b-form-checkbox>
         </div>
@@ -192,6 +217,8 @@ export default {
         return {
             // текущий таб
             tab: "institute",
+            // список всех табов
+            tabNames: ['institute', 'area', 'program'],
             // выбранные в селекте институты
             institute: [],
             // все институты
@@ -286,6 +313,22 @@ export default {
         },    
     },
     computed: {
+        prevTab() {
+            // Вернуть имя предыдущего таба, если текущий таб первый вернуть его
+            if (this.tabNames.indexOf(this.tab) == 0) {
+                return this.tab
+            } else {
+                return this.tabNames[this.tabNames.indexOf(this.tab) - 1]
+            }
+        },
+        nextTab() {
+            // Вернуть имя следующего таба, если текущий таб последний вернуть его
+            if (this.tabNames.indexOf(this.tab) == this.tabNames.length - 1) {
+                return this.tab
+            } else {
+                return this.tabNames[this.tabNames.indexOf(this.tab) + 1]
+            }
+        },
         programsOptions() {
             // список для выбора из программ с учетом группы "Все программы" и опции "только свои программы" для РОП
             if (this.onlyMyOwnProgs) return this.userPrograms      
@@ -672,5 +715,66 @@ export default {
 }
 .program-select > .selected-programs > ul > li > a.delete:hover {
     background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMUw5IDkiIHN0cm9rZT0iI2Y1MjIyZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNOSAxTDEgOSIgc3Ryb2tlPSIjZjUyMjJkIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=");
+}
+
+@media (max-width: 575px) {
+    /* временно */
+    .program-select > .steps {
+        /* display: none; */
+    }
+
+    .program-select p {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 0;
+        color: #72808E;
+        padding: 0 12px;
+    }
+
+    .program-select .text-caption {
+        display: none;
+    }
+
+    .program-select h2 {
+        margin-bottom: 25px;
+    }
+
+    .program-select .steps {
+        margin-top: 30px;
+    }
+
+    .program-select .step:not(.active) {
+        display: none;
+    }
+
+    .program-select .prog_select__only_own {
+        margin-top: 30px;
+    }
+
+    .prog_select__only_own label {
+        font-size: 14px !important; 
+        line-height: 20px;
+    }
+
+    .custom-switch.b-custom-control-lg .custom-control-label::before {
+        top: 3px;
+        width: 32px;
+        height: 16px;
+    }
+
+    .custom-switch.b-custom-control-lg .custom-control-label::after {
+        top: calc( 0.2975rem + 2px );
+        width: 10px;
+        height: 10px;
+        left: calc( -2.7rem + 2px );
+        background: #467BE3;
+    }
+
+    .program-select > .steps > .step {
+        padding-bottom: 12px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 </style>
