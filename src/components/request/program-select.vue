@@ -918,9 +918,5 @@ export default {
         margin-top: 5px;
     }
 
-    /* .multiselect.program-multiselect .multiselect__content-wrapper {
-        min-height: 430px;
-    } */
-
 }
 </style>

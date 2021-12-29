@@ -280,18 +280,18 @@
           <b-container class="pin-bottom__container">
             <b-row>
               <b-col cols="12">
-                <b-card class="card_content">
-                  <b-button variant="primary" @click="sendRequest"
+                <b-card class="card_content request-controls">
+                  <b-button class="send-button" variant="primary" @click="sendRequest"
                     >Отправить заявку</b-button
                   >
-                  <b-button @click="sendRequest('draft')">Сохранить</b-button>
+                  <b-button class="save-button" @click="sendRequest('draft')">Сохранить</b-button>
                   <b-button
                     v-if="$route.params && $route.params.id"
                     variant="danger"
                     @click="removeRequest"
                     >Удалить</b-button
                   >
-                  <b-button class="btn_flat" @click="savePDF"
+                  <b-button class="btn_flat save-pdf-button" @click="savePDF"
                     >Сохранить в&nbsp;PDF</b-button
                   >
 
@@ -834,10 +834,6 @@ export default {
 <style scoped>
 
 @media (max-width: 575px) {
-	/* временно */
-	.pin-bottom {
-		display: none;
-	}
 
 	.newRequest__top {
 		font-size: 16px;
@@ -932,6 +928,30 @@ export default {
 
 	/deep/ .card_content_program-select .card-body {
 		padding: 22px 12px !important;
+	}
+
+	/deep/ .request-controls .card-body {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 15px 15px 70px;
+		gap: 10px;
+	}
+
+	/deep/ .request-controls .btn {
+		width: 100%;
+		height: 40px;
+	}
+
+	/deep/ .request-controls .send-button {
+		order: 3;
+	}
+
+	/deep/ .request-controls .save-button {
+		order: 2;
+	}
+
+	/deep/ .request-controls .save-pdf-button {
+		order: 1;
 	}
 }
 
