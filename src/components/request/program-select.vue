@@ -114,7 +114,7 @@
                 >
                     <template slot="option" slot-scope="props">
                         <div class="option__desc jc_space_between">
-                            <div class="option__desc mr-3">
+                            <div class="option__desc mr-sm-3">
                                 <div class="program_sel__checkbox" :class="{ highlighted: props.option.highlighted}"></div>
                                 <div class="option__grey">{{ props.option.uid }}</div>
                                 <div class="option__title">{{ props.option.name }} </div>
@@ -151,7 +151,7 @@
                         <div class="option__desc jc_space_between">
                             <div class="option__desc">                
                                 <div class="program_sel__checkbox program__checkbox" :class="{checked:showAllProgSelectedChkbx}"></div>
-                                <div class="option__column mr-3">
+                                <div class="option__column mr-sm-3">
                                     <div class="option__row ml-2 opt_prog_title">
                                         <p>
                                             <span class="option__prog_uid">{{ props.option.uid }}</span>                    
@@ -775,6 +775,128 @@ export default {
         padding-bottom: 12px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .program-select .panels .panel {
+        padding: 22px 0 0;
+    }
+
+    .multiselect__tags {
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .multiselect__input {
+        margin: 0;
+        padding: 0;
+        width: 180px !important;
+        text-overflow: ellipsis;
+    }
+
+    .multiselect__input::placeholder {
+        text-overflow: ellipsis;
+        width: 180px;
+        overflow: hidden;
+    }
+
+    .multiselect__placeholder {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 180px;
+        margin-bottom: 0;
+    }
+
+    .program-select .panels .panel .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 24px 0 0;
+    }
+
+    .program-select .buttons .btn-primary {
+        padding: 0;
+        margin-right: 0;
+        background: none;
+        color: #467be3;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+        margin-left: auto;
+        border: none;
+    }
+
+    .multiselect__option {
+        height: auto;
+        padding: 10px 15px;
+    }
+
+    .program-select .option__desc.jc_space_between {
+        flex-direction: column;
+        align-items: start;
+        min-height: initial;
+    }
+
+    .program-select .option__desc:not(.jc_space_between) {
+        display: grid;
+        grid-template-columns: 16px auto;
+        grid-column-gap: 10px;
+        width: 100%;
+        align-items: start;
+        min-height: initial;
+    }
+
+    .program-select .option__right {
+        margin-right: 0;
+        margin-left: 26px;
+        font-size: 14px;
+        line-height: 18px;
+        color: #9da7b0;
+    }
+
+    .program-select .option__title {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        margin-left: 0;
+        line-height: 18px;
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    .program-select .option__grey + .option__title::before {
+        content: '';
+        display: inline-block;
+        width: 60px;
+    }
+
+    /* .program-select .option__title::before {
+        content: '';
+        display: inline-block;
+        width: 60px;
+    } */
+
+    .program-select .option__grey {
+        margin: 0;
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        width: fit-content;
+        font-size: 14px;
+        line-height: 18px;
+        color: #9DA7B0;
+    }
+
+    .program-select .program_sel__checkbox {
+        margin: 0;
+        margin-top: 3px;
+    }
+
+    .program-select .multiselect__tag {
+        display: none;
+    }
+
+    .program-select > .steps > .step > .badge.badge-secondary {
+        display: none;
     }
 }
 </style>
