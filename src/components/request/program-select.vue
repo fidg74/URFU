@@ -147,6 +147,14 @@
                     :group-select="!hideAllProgs"
                     @select="progSelectHandler"
                 >
+                    <div class="multiselect__all-programs d-sm-none" slot="beforeList" @click="toggleAllMultiselectPrograms">
+                        <div class="option__desc jc_space_between">
+                            <div class="option__desc">                
+                                <div class="program_sel__checkbox program__checkbox" :class="{checked:showAllProgSelectedChkbx}"></div>
+                                <p>Выбрать все</p>
+                            </div>
+                        </div>
+                    </div>
                     <template slot="option" slot-scope="props">
                         <div class="option__desc jc_space_between">
                             <div class="option__desc">                
@@ -167,6 +175,9 @@
                             </div>
                         </div>
                     </template>
+                    <div class="multiselect__accept d-sm-none" slot="afterList">
+                        <button class="btn btn-primary" @click="addSelected">Выбрать программу</button>
+                    </div>
                     <span slot="noResult">Ничего не найдено.</span>
                     <span slot="noOptions">По условиям поиска программы отсутствуют.</span>
                 </multiselect>
@@ -259,6 +270,9 @@ export default {
         });
     },
     methods: {
+        toggleAllMultiselectPrograms() {
+            this.program = this.program.length ? [] : this.programs
+        },
         go(tab) {
             this.tab = tab;
         },
@@ -310,7 +324,7 @@ export default {
         },
         nameWithUid({ name, uid }) {
             return `${uid} ${name}`;
-        },    
+        }
     },
     computed: {
         prevTab() {
@@ -916,6 +930,55 @@ export default {
     .multiselect.program-multiselect .prog_url {
         margin-left: 26px;
         margin-top: 5px;
+    }
+
+    
+
+    .program-multiselect .multiselect__content-wrapper {
+        overflow: hidden;
+        height: 430px;
+        max-height: initial !important;
+    } 
+
+    .program-multiselect .multiselect__content {
+        height: 365px;
+        overflow: auto;
+    }
+    
+    .program-multiselect .multiselect__accept {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .program-multiselect .multiselect__accept .btn {
+        margin-right: none;
+        width: 100%;
+        height: 40px;
+    }
+
+    .multiselect__all-programs {
+        padding: 15px 17px;
+    }
+
+    .multiselect__all-programs .option__desc {
+        align-items: center;
+    }
+
+    .multiselect__all-programs .program_sel__checkbox {
+        margin-top: 1px;
+        position: relative;
+    }
+
+    .multiselect__all-programs .program_sel__checkbox::after {
+        position: absolute;
+        top: -2px;
+        left: 2px;
     }
 
 }

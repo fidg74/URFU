@@ -953,6 +953,19 @@ export default {
 	/deep/ .request-controls .save-pdf-button {
 		order: 1;
 	}
+
+  .pin-bottom {
+    transform: translateY(0);
+  }
+
+  .pin-bottom_on {
+    position: static;
+    box-shadow: none;
+  }
+
+  .pin-bottom .card_content {
+    margin-top: 0;
+  }
 }
 
 </style>
