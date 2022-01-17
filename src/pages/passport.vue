@@ -1001,7 +1001,7 @@ export default {
     },
     data () {
         return {
-            showStatus: true,
+            showStatus: false,
             showDescrFull: true,
             scrWidth: 0,
             resourcesFields: [
