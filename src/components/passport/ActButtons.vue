@@ -1,82 +1,98 @@
 <template>
     <div>
-        <div class="mobile" v-bind:scrActBtnWidth="scrActBtnWidth" v-if="scrActBtnWidth <= 576">
-            <b-overlay :show="isPassportApproveLoading" spinner-small spinner-variant="primary" rounded="sm" opacity="0.6" class="d-inline-block">
-                <b-button v-if="buttons.indexOf('accept') > -1" @click="sendReviewResult('accept')" variant="primary" >
-                    {{  {
-                        'ACPT': 'Утвердить паспорт',
-                        'ACUV': 'Принять в редакции Университета',
-                        'ACPV': 'Принять в редакции Заказчика',
-                        }[project.available_actions.accept]
-                    }}
-                </b-button>
-            </b-overlay>
-            
-            <b-button @click="openReviewResult" variant="primary" v-if="buttons.indexOf('review') > -1">
-                {{ project.available_actions.review == "RVPA" ? "Отправить на согласование Заказчику" : "Отправить на согласование в Университет" }}
-            </b-button>
-
-            <b-button v-if="buttons.indexOf('approve') > -1" @click="openApproveModal(true)">
-                {{ textFromAbbr(currentProgram.available_actions.approve) }}
-            </b-button>
-
-            <b-button v-if="buttons.indexOf('decline') > -1" @click="openApproveModal(false)">
-                Отправить на доработку
-            </b-button>
-
-            <CuratorSelect
-                v-if="buttons.indexOf('assign_curator') > -1"
-                variant="secondary"
-                title="Назначить куратора"
-                @input="
-                    (curatorId) => {
-                        $store.dispatch('project/assignCurator', {
-                            id: project.id,
-                            params: {
-                                program: myProgram.program.id,
-                                curator: curatorId,
-                            },
-                        }).then(data => {
-                            this.$store.dispatch('project/FETCH_project', { id: project.id, project: data.project })
-                            this.$store.dispatch('project/FETCH_messages', { id: project.id, messages: data.project.messages })
-                        })
-                    }
-                "
-            />
-
-            <CuratorSelect
-                v-if="buttons.indexOf('change_curator') > -1"
-                btnClass="btn_flat"
-                variant="secondary"
-                title="Сменить куратора"
-                @input="
-                    (curator) => {
-                        $store.dispatch('project/changeCurator', {
-                            id: project.id,
-                            params: {
-                                program: myProgram.program.id,
-                                curator: curator,
-                            },
-                        });
-                    }
-                "
-            />
-
-            <b-button v-if="buttons.indexOf('edit') > -1" @click="editPassport()">Редактировать</b-button>
-            <!-- Кнопка "Редактировать" партнера (устарела) -->
-            <!--<b-button v-if="partnerCanEdit" @click="editPassport()">Редактировать</b-button>-->
-
-            <b-button class="btn_flat" v-if="buttons.indexOf('add_program') > -1" v-b-modal="'assignProgramModal_' + uid">
-                Пригласить РОПа
-            </b-button>
-
-            <b-button v-if="buttons.indexOf('export_its') > -1" @click="openExportITSModal()">
-                Выгрузить в ИТС
-            </b-button>
-
-            <b-button class="btn_flat" v-if="buttons.indexOf('print_pdf') > -1" @click="makePDF(project, 'passport')">
+        <div class="mobile"  v-bind:scrActBtnWidth="scrActBtnWidth" v-if="scrActBtnWidth <= 576">
+            <div><i class="bi bi-chevron-up"></i>
+            <svg @click="showPassActions = !showPassActions" v-show="!showPassActions" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+            </svg>
+            <i class="bi bi-chevron-down"></i>
+            <svg @click="showPassActions = !showPassActions" v-show="showPassActions" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            <b-button style="margin-left: 10px" v-show="!showPassActions" class="btn_flat" v-if="buttons.indexOf('print_pdf') > -1" @click="makePDF(project, 'passport')">
                 Сохранить в PDF
-            </b-button>
+            </b-button></div>
+
+            <transition>
+                <div class="div-mob" v-if="showPassActions">
+                    <b-overlay :show="isPassportApproveLoading" spinner-small spinner-variant="primary" rounded="sm" opacity="0.6" class="d-inline-block">
+                        <b-button v-if="buttons.indexOf('accept') > -1" @click="sendReviewResult('accept')" variant="primary" >
+                            {{  {
+                                'ACPT': 'Утвердить паспорт',
+                                'ACUV': 'Принять в редакции Университета',
+                                'ACPV': 'Принять в редакции Заказчика',
+                                }[project.available_actions.accept]
+                            }}
+                        </b-button>
+                    </b-overlay>
+                    
+                    <b-button @click="openReviewResult" variant="primary" v-if="buttons.indexOf('review') > -1">
+                        {{ project.available_actions.review == "RVPA" ? "Отправить на согласование Заказчику" : "Отправить на согласование в Университет" }}
+                    </b-button>
+
+                    <b-button v-if="buttons.indexOf('approve') > -1" @click="openApproveModal(true)">
+                        {{ textFromAbbr(currentProgram.available_actions.approve) }}
+                    </b-button>
+
+                    <b-button v-if="buttons.indexOf('decline') > -1" @click="openApproveModal(false)">
+                        Отправить на доработку
+                    </b-button>
+
+                    <CuratorSelect
+                        v-if="buttons.indexOf('assign_curator') > -1"
+                        variant="secondary"
+                        title="Назначить куратора"
+                        @input="
+                            (curatorId) => {
+                                $store.dispatch('project/assignCurator', {
+                                    id: project.id,
+                                    params: {
+                                        program: myProgram.program.id,
+                                        curator: curatorId,
+                                    },
+                                }).then(data => {
+                                    this.$store.dispatch('project/FETCH_project', { id: project.id, project: data.project })
+                                    this.$store.dispatch('project/FETCH_messages', { id: project.id, messages: data.project.messages })
+                                })
+                            }
+                        "
+                    />
+
+                    <CuratorSelect
+                        v-if="buttons.indexOf('change_curator') > -1"
+                        btnClass="btn_flat"
+                        variant="secondary"
+                        title="Сменить куратора"
+                        @input="
+                            (curator) => {
+                                $store.dispatch('project/changeCurator', {
+                                    id: project.id,
+                                    params: {
+                                        program: myProgram.program.id,
+                                        curator: curator,
+                                    },
+                                });
+                            }
+                        "
+                    />
+
+                    <b-button v-if="buttons.indexOf('edit') > -1" @click="editPassport()">Редактировать</b-button>
+                    <!-- Кнопка "Редактировать" партнера (устарела) -->
+                    <!--<b-button v-if="partnerCanEdit" @click="editPassport()">Редактировать</b-button>-->
+
+                    <b-button class="btn_flat" v-if="buttons.indexOf('add_program') > -1" v-b-modal="'assignProgramModal_' + uid">
+                        Пригласить РОПа
+                    </b-button>
+
+                    <b-button v-if="buttons.indexOf('export_its') > -1" @click="openExportITSModal()">
+                        Выгрузить в ИТС
+                    </b-button>
+
+                    <b-button class="btn_flat" v-if="buttons.indexOf('print_pdf') > -1" @click="makePDF(project, 'passport')">
+                        Сохранить в PDF
+                    </b-button>
+                </div>
+            </transition>
 
             <!-- Модалки -->
 
@@ -389,6 +405,7 @@ export default {
     },
     data() {
         return {
+            showPassActions: false,
             scrActBtnWidth: 0,
             uid: '',
             approve: null,
@@ -654,8 +671,8 @@ export default {
     letter-spacing: -0.2px;
 }
 
-@media (max-width: 576px){
-    .mobile>*{
+@media (max-width: 577px){
+    .div-mob>*{
         margin-bottom: 10px;
         margin-right: 0;
         width: 100%;

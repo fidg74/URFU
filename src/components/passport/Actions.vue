@@ -16,10 +16,10 @@
             </b-container>
         </div>
 
-        <div class="mt-4 mb-4" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth <= 576">
+        <div style="padding-left:0" v-pin-bottom class="pin-bottom_btns mt-4 mb-4" v-bind:scrActWidth="scrActWidth" v-if="scrActWidth <= 576">
             <b-container class="pin-bottom__container">
-                <b-col style="padding:0;">
-                    <b-col cols="13">
+                <b-row style="">
+                    <b-col>
                         <b-card class="card_content">
                             <span
                                 v-b-tooltip
@@ -28,7 +28,7 @@
                             <ActButtons :buttons="buttonsByOrder" @errors="errors => $emit('errors', errors)" />
                         </b-card>
                     </b-col>
-                </b-col>
+                </b-row>
             </b-container>
         </div>
     </div>

@@ -398,7 +398,7 @@
                         <h2>Приложения</h2>
                         <FileDownload download :file="file" v-for="file in project.req_files" :key="file.file_id" class="mt-4" />
                     </b-card>
-                    <div v-pin-bottom style="padding: 0; padding-left: 8%;">
+                    <div v-pin-bottom style="padding: 0; ">
                         <i class="bi bi-three-dots"></i>
                         <b-container class="pin-bottom__container">
                             <b-row>

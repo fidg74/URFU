@@ -1,10 +1,10 @@
 <template>
-    <b-container class="passport-page" style="background: #F1F4FA;">
+    <b-container class="passport-page colored-F1F4FA">
         <b-button variant="primary" class="btn_flat mb-3" to="/projects">
             <i class="fas fa-arrow-left" />
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left mb-1" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-</svg>
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
             <span>Все паспорта</span>
         </b-button>
 
@@ -1277,5 +1277,15 @@ body.pin-bottom-on .b-toaster.b-toaster-bottom-left {
 .passport-page .right-sidebar .btn.show-changes:focus {
     outline: none;
     box-shadow: none;
+}
+
+.colored-F1F4FA{
+        background: none;
+    }
+
+@media(max-width: 577px){
+    .colored-F1F4FA{
+        background: #F1F4FA;
+    }
 }
 </style>
