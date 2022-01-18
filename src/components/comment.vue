@@ -299,4 +299,63 @@ export default {
 .comment.comment_open > .popup > .comment__footer > .buttons {
     margin-top: 12px;
 }
+
+@media(max-width: 576px){
+    .comment > .popup {
+    width: 320px;
+    right: -710%;
+    text-align: left;
+    max-height: 100%;
+    }
+
+    .comment.comment_open > .popup > .comment__footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 20px;
+    min-height: 300px;
+    }
+
+    .comment.comment_open > .popup > .comment__footer > .comment-wrapper {
+    background: #F8F9F9;
+    border-radius: 6px;
+    padding: 10px 0 6px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+    height: 236px;
+    }
+
+    .comment.comment_open > .popup > .comment__footer > .comment-wrapper > .comment__textarea {
+    border: none;
+    outline: none;
+    width: auto;
+    resize: none;
+    padding: 0;
+    background: #F8F9F9;
+    flex: 1 1 auto;
+    }
+
+    .comment.comment_open > .popup {
+    opacity: 1;
+    max-height: none;
+    transform: translateX(0px);
+    border-radius: 6px 0 6px 6px;
+    }
+
+    .buttons>*{
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .comment.comment_open > .popup > .comment__body {
+    padding: 20px;
+    max-height: 380px;
+    overflow-y: auto;
+    }
+
+    .comment.comment_open > .popup > .comment__body::-webkit-scrollbar {
+        display: none;
+    }
+}
 </style>
