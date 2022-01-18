@@ -1,7 +1,7 @@
 <template>
-    <b-container class="pb-4">
+    <b-container class="pb-sm-4">
         <h1>{{ mode === 'project' ? 'Паспорта' : mode === 'request' ? 'Заявки' : 'Реализуемые проекты' }}</h1>
-        <div class="h1__description mb-4" v-if="mode === 'request' && user.canCreate && !!this.semesterActual && this.semesterActual.period && (user.isRop || user.isZP)">
+        <div class="h1__description mb-sm-4" v-if="mode === 'request' && user.canCreate && !!this.semesterActual && this.semesterActual.period && (user.isRop || user.isZP)">
             Подайте заявку на {{ this.semesterActual.period.toLowerCase() }} семестр {{ this.semesterActual.year }} до {{ this.formatDate(this.semesterActual.deadline) }}.
             <i class="far fa-question-circle" v-b-tooltip.hover title="Если вы оставите заявку после указанной даты, то ее реализация переносится на следующий семестр." />
             <div class="mt-2" v-if="variables && variables.length">
@@ -9,12 +9,12 @@
             </div>
         </div>
 
-        <b-row class="mt-4" v-if="mode === 'request'">
-            <b-col v-if="user.isZP || user.isRop" sm="8" order-md="1" order="2">
+        <b-row class="mt-sm-4 tabs-row" v-if="mode === 'request'">
+            <b-col v-if="user.isZP || user.isRop" class="overflow-auto" sm="8">
                 <Tabs v-if="tabItems && tabItems.length" v-model="filterOwn" :items="tabItems" />
                 <b-spinner variant="secondary" class="ml-4 filter__loading" v-if="isLoading" />
             </b-col>
-            <b-col v-else sm="8" order-md="1" order="2">
+            <b-col v-else sm="8">
                 <div class="h1__description" v-if="mode === 'request' && !!this.semesterActual && this.semesterActual.period">
                     Подайте заявку на {{ this.semesterActual.period.toLowerCase() }} семестр {{ this.semesterActual.year }} до {{ this.formatDate(this.semesterActual.deadline) }}.
                     <i class="far fa-question-circle" v-b-tooltip.hover title="Если вы оставите заявку после указанной даты, то ее реализация переносится на следующий семестр." />
@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </b-col>
-            <b-col v-if="user.canCreate" class="text-right" sm="4" order-md="2" order="1">
+            <b-col v-if="user.canCreate" class="text-right" sm="4">
                 <b-button variant="primary" to="/new_request" class="mobile-w100 m-mb-2">
                     <i class="icon icon-plus" />
                     <span>Подать новую заявку</span>
@@ -37,14 +37,25 @@
         </div>
 
         <b-row class="projects">
-            <b-col sm="9" order-md="1" order="2">
+            <b-col sm="9">
                 <b-card class="filter__search">
                     <b-form-group class="form__search" label="Поиск">
                         <b-form-input class="form__search-input" v-model="search" required autocomplete="off" type="text" :placeholder="mode === 'project' ? 'Поиск по паспортам' : mode === 'request' ? 'Поиск по заявкам' : 'Поиск по проектам'" />
+                        <button class="filter-toggle d-sm-none" @click="filterMobileShow = true">
+                          <svg class="filter-toggle__svg" width="25" height="23" viewBox="0 0 25 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 18.75C3.5 16.6789 5.17893 15 7.25 15C9.32107 15 11 16.6789 11 18.75C11 20.8211 9.32107 22.5 7.25 22.5C5.17893 22.5 3.5 20.8211 3.5 18.75ZM7.25 16.5C6.00736 16.5 5 17.5074 5 18.75C5 19.9926 6.00736 21 7.25 21C8.49264 21 9.5 19.9926 9.5 18.75C9.5 17.5074 8.49264 16.5 7.25 16.5Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14 11.25C14 9.17893 15.6789 7.5 17.75 7.5C19.8211 7.5 21.5 9.17893 21.5 11.25C21.5 13.3211 19.8211 15 17.75 15C15.6789 15 14 13.3211 14 11.25ZM17.75 9C16.5074 9 15.5 10.0074 15.5 11.25C15.5 12.4926 16.5074 13.5 17.75 13.5C18.9926 13.5 20 12.4926 20 11.25C20 10.0074 18.9926 9 17.75 9Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 3.75C3.5 1.67893 5.17893 1.6891e-06 7.25 1.50804e-06C9.32107 1.32698e-06 11 1.67893 11 3.75C11 5.82107 9.32107 7.5 7.25 7.5C5.17893 7.5 3.5 5.82107 3.5 3.75ZM7.25 1.5C6.00736 1.5 5 2.50736 5 3.75C5 4.99264 6.00736 6 7.25 6C8.49264 6 9.5 4.99264 9.5 3.75C9.5 2.50736 8.49264 1.5 7.25 1.5Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.25 18L24.5 18L24.5 19.5L10.25 19.5L10.25 18ZM0.5 18L4.25 18L4.25 19.5L0.5 19.5L0.5 18Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.25 3L24.5 3L24.5 4.5L10.25 4.5L10.25 3ZM0.499998 3L4.25 3L4.25 4.5L0.499998 4.5L0.499998 3Z" fill="#467BE3"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.75 10.5L0.499999 10.5L0.499999 12L14.75 12L14.75 10.5ZM24.5 10.5L20.75 10.5L20.75 12L24.5 12L24.5 10.5Z" fill="#467BE3"/>
+                          </svg>
+                          <span class="filter-toggle__num" v-if="numActiveFilters">{{ numActiveFilters }}</span>
+                        </button>
                         <button class="form__search-close" @click="search = null" />
                     </b-form-group>
           
-                    <div v-if="((mode === 'request' && user.isRop && filterOwn === 'all') || user.isZP)" class="program">
+                    <div v-if="((mode === 'request' && user.isRop && filterOwn === 'all') || user.isZP)" class="program d-none d-sm-block">
                         <ProgramSelect btn="Показать проекты" multiple v-model="filterItem.program"/>
                     </div>
 
@@ -52,6 +63,37 @@
                         <div class="ml-1 text-oneline">Показать горящие заявки</div>
                     </b-form-checkbox>
                 </b-card>
+
+                <div class="filter__aside status-filter d-sm-none" v-if="mode !== 'implementation'">
+                    <div class="status-filter__dropdown" @click="toggleFilterStatus">
+                      <h4 class="pl-sm-4 mb-0 mb-sm-2 weight-bold">Статус</h4>
+                      <div class="status-filter__arrow" :class="{'opened': showFilterStatus}">
+                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <mask id="mask0_17260_1460" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="8" height="8">
+                          <rect width="8" height="8" fill="#C4C4C4"/>
+                          </mask>
+                          <g mask="url(#mask0_17260_1460)">
+                          <path d="M4.15787 7.29702L7.24894 3.32279C7.35112 3.19142 7.2575 3 7.09107 3L0.908928 3C0.742498 3 0.648879 3.19142 0.751057 3.32279L3.84213 7.29702C3.9222 7.39997 4.0778 7.39997 4.15787 7.29702Z" fill="#467BE3"/>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                    <b-form-group v-if="mode === 'request'" :class="{'d-none': !showFilterStatus}">
+                        <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все заявки</b-form-radio>
+                        <b-form-radio :disabled="!(user.canCreate && (!filterOwn || filterOwn === 'mine'))" class="filter__status filter__status_DRFT" button v-model="filterState" value="DRFT">Черновик</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PUBL">На рассмотрении</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_ACPT" button v-model="filterState" value="ACPT">Принятые</b-form-radio>
+                        <b-form-radio v-if="user.mainRole !== 'curator'" class="filter__status filter__status_DCLN" button v-model="filterState" :value="user.isRop ? 'PDCL' : 'DCLN'">Непринятые</b-form-radio>
+                    </b-form-group>
+                    <b-form-group v-else>
+                        <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все паспорта</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PSST">Формирование паспорта</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PSPT">Паспорт на&nbsp;согласовании у&nbsp;партнера</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_PUBL" button v-model="filterState" value="PSUN">Паспорт на&nbsp;согласовании у&nbsp;университета</b-form-radio>
+                        <b-form-radio class="filter__status filter__status_ACPT" button v-model="filterState" value="PSAP">Паспорт утвержден</b-form-radio>
+                        <!-- <b-form-radio class="filter__status filter__status_ACPT" button v-model="filterState" value="CMPL">Завершенные</b-form-radio> -->
+                    </b-form-group>
+                </div>
 
                 <div class="projects__list" :class="{ 'avoid-events': isLoading }" v-if="projects && projects.length">
                     <ProjectListItem :mode="mode" @update-project="updateProjectsElement" :project="project" v-for="project in projects" :key="project.id" />
@@ -63,7 +105,23 @@
                     </b-card>
                 </div>
             </b-col>
-            <b-col sm="3" order-md="2" order="1">
+
+            <b-col sm="3" class="mobile-filter" :class="{'show': filterMobileShow}">
+
+                <div class="mobile-filter__header d-sm-none">
+                    <h3 class="mobile-filter__title">Настройки фильтров</h3>
+                    <button class="mobile-filter__close" @click="filterMobileShow = false">
+                      <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="1.29289" y1="15.2929" x2="15.435" y2="1.15076" stroke="#467BE3" stroke-width="2"/>
+                        <path d="M2 1.29297L16.1421 15.4351" stroke="#467BE3" stroke-width="2"/>
+                      </svg>
+                    </button>
+                </div>
+
+                <div v-if="((mode === 'request' && user.isRop && filterOwn === 'all') || user.isZP)" class="program d-sm-none">
+                    <ProgramSelect btn="Показать проекты" multiple v-model="filterItem.program"/>
+                </div>
+
                 <div v-pin-aside="100" class="m-mb-4">
                     <b-card class="filter__search filter__search_aside">
                         <b-form-group class="form__search" label="Поиск">
@@ -80,7 +138,7 @@
                         </b-form-checkbox>
                     </b-card>
 
-                    <div class="filter__aside" v-if="mode !== 'implementation'">
+                    <div class="filter__aside d-none d-sm-block" v-if="mode !== 'implementation'">
                         <h4 class="pl-4 mb-2 weight-bold">Статус</h4>
                             <b-form-group v-if="mode === 'request'">
                                 <b-form-radio class="filter__status filter__status_ALL" button v-model="filterState" :value="null">Все заявки</b-form-radio>
@@ -99,34 +157,34 @@
                             </b-form-group>
                     </div>
 
-          <div class="filter__aside filter_items">
-            <div v-if="user.isPlAdmin" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('manager') > -1 }">
-              <b-button @click="filterItemToggle('manager')">Заказчик <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
-              <div class="filter__content">
-                <b-form-checkbox-group v-if="managers && managers.length && filterItem.manager && filterItem.manager.length" v-model="filterItem.manager" name="filterItemPartner" stacked>
-                  <b-form-checkbox v-for="managerId in filterItem.manager" :key="managerId" :value="managerId">
-                    <div class="text-oneline ml-2 mb-2">{{ userFullName(getManager(managerId)) }}</div>
-                  </b-form-checkbox>
-                </b-form-checkbox-group>
-                <ManagerSelect button multiple v-model="filterItem.manager" />
-              </div>
-            </div>
+                <div class="filter__aside filter_items">
+                  <div v-if="user.isPlAdmin" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('manager') > -1 }">
+                    <b-button @click="filterItemToggle('manager')">Заказчик <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
+                    <div class="filter__content">
+                      <b-form-checkbox-group v-if="managers && managers.length && filterItem.manager && filterItem.manager.length" v-model="filterItem.manager" name="filterItemPartner" stacked>
+                        <b-form-checkbox v-for="managerId in filterItem.manager" :key="managerId" :value="managerId">
+                          <div class="text-oneline ml-2 mb-2">{{ userFullName(getManager(managerId)) }}</div>
+                        </b-form-checkbox>
+                      </b-form-checkbox-group>
+                      <ManagerSelect button multiple v-model="filterItem.manager" />
+                    </div>
+                  </div>
 
-            <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('multiprogram') > -1 }">
-              <b-button @click="filterItemToggle('multiprogram')">Программы <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
-              <div class="filter__content">
-                <b-form-radio class="mb-3" v-model="filterItem.multiprogram" value="yes">Межпрограммный</b-form-radio>
-                <b-form-radio v-model="filterItem.multiprogram" value="no">Монопрограммный</b-form-radio>
-              </div>
-            </div>
+                <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('multiprogram') > -1 }">
+                  <b-button @click="filterItemToggle('multiprogram')">Программы <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
+                  <div class="filter__content">
+                    <b-form-radio class="mb-3" v-model="filterItem.multiprogram" value="yes">Межпрограммный</b-form-radio>
+                    <b-form-radio v-model="filterItem.multiprogram" value="no">Монопрограммный</b-form-radio>
+                  </div>
+                </div>
 
-            <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('research') > -1 }">
-              <b-button @click="filterItemToggle('research')">Тип <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
-              <div class="filter__content">
-                <b-form-radio class="mb-3" v-model="filterItem.research" value="yes">Исследовательский</b-form-radio>
-                <b-form-radio v-model="filterItem.research" value="no">Прикладной</b-form-radio>
-              </div>
-            </div>
+                <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('research') > -1 }">
+                  <b-button @click="filterItemToggle('research')">Тип <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
+                  <div class="filter__content">
+                    <b-form-radio class="mb-3" v-model="filterItem.research" value="yes">Исследовательский</b-form-radio>
+                    <b-form-radio v-model="filterItem.research" value="no">Прикладной</b-form-radio>
+                  </div>
+                </div>
 
             <div v-if="user.mainRole !== 'partner' && (mode === 'project' || mode === 'implementation')" class="filter__item filter__item_oneline" :class="{ 'filter__item_open': filterActive.indexOf('difficulty') > -1 }">
               <b-button @click="filterItemToggle('difficulty')">Сложность <i class="icon-plus icon-plus_blue filter__item-x" /></b-button>
@@ -261,14 +319,25 @@
             </div>
           </div>
 
-          <b-button class="btn_full p-2 mr-0" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
+          <div class="mobile-filter__buttons d-sm-none">
+            <b-button class="btn_full p-2" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
+              Очистить фильтры
+            </b-button>
+          </div>
+
+          <b-button class="btn_full p-2 mr-0 d-none d-sm-inline-block" variant="danger" @click="resetFilter" v-if="filterState !== null || (filterActive && filterActive.length) || (filterZP && filterZP.length) || (filterItem.program && filterItem.program.length) || filterItem.hot">
             Очистить фильтры
           </b-button>
         </div>
       </b-col>
     </b-row>
 
-    <Paginator v-if="projects && projects.length" :pages="pagesData" @change-page="fetchList" />
+    <b-row class="d-sm-none">
+      <b-col class="overflow-auto">
+        <Paginator v-if="projects && projects.length" :pages="pagesData" @change-page="fetchList" class="paginator-projects" />
+      </b-col>
+    </b-row>
+    
   </b-container>
 </template>
 
@@ -366,7 +435,7 @@ export default {
       filterActive: [],
       showHotRequest: false,
       filterItemYear: null,
-
+      showFilterStatus: false,
       projects: null,
       cancelToken: null,
       search: null,
@@ -376,7 +445,9 @@ export default {
       },
 
       throttleFetchList: null,
-      zp_notif_text: ''
+      zp_notif_text: '',
+
+      filterMobileShow: false
     }
   },
   created () {
@@ -414,6 +485,7 @@ export default {
         })
       }).then(data => {
         this.cancelToken = null
+        // console.log(data.data)
         if (data.data) {
           this.projects = data.data.results
           this.pagesData = data.data.pages
@@ -530,6 +602,9 @@ export default {
       const index = this.projects.findIndex(proj => proj.id === projectData.id)
       this.$set(this.projects, index, projectData)
     },
+    toggleFilterStatus() {
+      this.showFilterStatus = !this.showFilterStatus
+    }
   },
   computed: {
     isLoading () { return typeof this.cancelToken === 'function' },
@@ -583,6 +658,9 @@ export default {
       }
 
       return tmpTabs
+    },
+    numActiveFilters() {
+      return this.filterActive.length
     },
     params () {
       const paramsRes = new URLSearchParams()
@@ -860,7 +938,8 @@ export default {
 }
 @media (max-width: 575px) {
     .row.projects {
-        margin-top: 8px;
+        /* margin-top: 8px; */
+        margin-top: 0;
     }
     .btn.mobile-w100 {
         display: block;
@@ -870,7 +949,8 @@ export default {
         margin-top: 8px;
     }
     .m-mb-2 {
-        margin-bottom: 8px;
+        /* margin-bottom: 8px; */
+        margin-bottom: 17px;
     }
     .m-mb-4 {
         margin-bottom: 16px;
@@ -903,7 +983,231 @@ export default {
         margin-bottom: 0;
     }
     .project-card.card_content .card-body {
-        padding: 15px;
+        padding: 20px 15px 25px !important;
+    }
+
+    h1 {
+      font-size: 22px;
+      line-height: 30px;
+      margin-bottom: 10px;
+    }
+
+    h1 + .h1__description {
+      margin-top: initial;
+    }
+
+    .h1__description {
+      line-height: 20px;
+      margin-bottom: 15px;
+    }
+
+    .tabs-row .ui-tabs {
+      margin-bottom: 17px;
+    }
+
+    .tabs-row .btn {
+      height: 36px;
+    }
+
+    .btn > i {
+      margin-left: -20px;
+      margin-top: 5px;
+      position: absolute;
+    } 
+
+    .btn > i + span {
+      margin-left: 0;
+    }
+
+    .status-filter {
+      margin-top: 15px;
+    }
+
+    .filter__search .card-body {
+      padding: 20px 15px 15px !important;
+    }
+
+    .filter__search legend {
+      font-size: 16px;
+      line-height: 16px;
+      padding-bottom: 8px;
+    }
+
+    .form__search > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form__search input {
+      margin-right: 15px;
+    }
+
+    .filter-toggle {
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .filter-toggle__num {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(57, 146, 255, 0.12);
+      font-weight: 700;
+      font-size: 10px;
+      line-height: 10px;
+      top: -16px;
+      right: -7px;
+    }
+
+    .status-filter {
+      padding: 15px 15px 0px;
+      margin-bottom: 0;
+    }
+
+    .status-filter h4 {
+      font-weight: 500;
+    }
+
+    .status-filter__dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 15px;
+    }
+
+    .status-filter__arrow {
+      transition: .3s;
+    }
+
+    .status-filter__arrow.opened {
+      transform: rotate(180deg);
+    }
+
+    .status-filter__arrow.opened path {
+      fill: #9DA7B0;
+    }
+
+    .status-filter .filter__status .btn {
+      height: 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .status-filter .filter__status:last-child .btn {
+      margin-bottom: 7px;
+    }
+
+    .project-card .badge {
+      position: unset;
+    }
+
+    .projects__list {
+      margin-bottom: 0px;
+    }
+
+    .paginator-projects {
+      margin-top: 30px;
+    }
+
+    /* Фильтр мобильной версии */
+
+    .mobile-filter {
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      background: #FFFFFF;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+      z-index: 100;
+      padding: 0;
+      overflow: auto;
+      height: 100vh;
+      max-height: 100vh;
+      transition: .5s;
+    }
+
+    .mobile-filter.show {
+      top: 0;
+    }
+
+    .mobile-filter__header {
+      padding: 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-filter__title {
+      font-size: 18px;
+      line-height: 23px;
+      color: #000;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .mobile-filter__close {
+      background: none;
+      border: none;
+      padding: 0;
+      padding-right: 3px;
+    }
+
+    .mobile-filter .program {
+      padding: 0 12px 16px;
+    }
+
+    .mobile-filter .program legend {
+      font-size: 16px;
+      line-height: 16px;
+      padding-bottom: 8px;
+    }
+
+    .mobile-filter .pin-aside {
+      max-height: initial;
+      padding: 0 12px 15px;
+      margin-bottom: 0 !important;
+    }
+
+    .mobile-filter .filter__aside {
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .mobile-filter .filter__item {
+      padding: 4px 0;
+    }
+
+    .mobile-filter .filter__item .btn {
+      border-radius: 4px;
+      background: rgba(57, 146, 255, 0.12);
+      color: #467BE3;
+      font-size: 13px;
+      height: 40px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mobile-filter .filter__item_open .btn {
+      color: #111112;  
+    }
+
+    .mobile-filter .filter__item .btn > i {
+      display: none;
+    }
+
+    .mobile-filter__buttons {
+      padding-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 }
 </style>

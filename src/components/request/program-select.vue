@@ -9,7 +9,24 @@
             При рассмотрении вашей заявки мы дополним ваш выбор, если для выполнения
             проекта больше подходят другие программы.      
         </p>   
+
+        <b-form-checkbox 
+            switch
+            v-model="onlyMyOwnProgs"
+            v-if="user.isRop"
+            class="prog_select__only_own d-sm-none"
+            size="lg"
+        >Только мои программы</b-form-checkbox>
+
         <div class="steps">
+            <div class="steps__arrow steps__arrow--prev d-sm-none"
+                v-if="tab !== 'institute'"
+                @click="go(prevTab)" 
+            >
+                <svg width="18" height="8" viewBox="0 0 18 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.99237 0.835757L0.999577 3.82855M0.999577 3.82855L3.99237 6.82134M0.999577 3.82855H16.6567" stroke="#467BE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <div
                 class="step"
                 :class="{ active: tab == 'institute' }"
@@ -37,12 +54,20 @@
             >
                 Образовательная программа
                 <b-badge v-if="program.length">{{ program.length }}</b-badge>
-            </div>      
+            </div>    
+            <div class="steps__arrow steps__arrow--next d-sm-none"
+                v-if="tab !== 'program'"
+                @click="go(nextTab)" 
+            >
+                <svg width="18" height="8" viewBox="0 0 18 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.6639 0.835757L16.6567 3.82855M16.6567 3.82855L13.6639 6.82134M16.6567 3.82855H0.999577" stroke="#467BE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>  
             <b-form-checkbox 
                 switch
                 v-model="onlyMyOwnProgs"
                 v-if="user.isRop"
-                class="prog_select__only_own"
+                class="prog_select__only_own d-none d-sm-block"
                 size="lg"
             >Только мои программы</b-form-checkbox>
         </div>
@@ -89,7 +114,7 @@
                 >
                     <template slot="option" slot-scope="props">
                         <div class="option__desc jc_space_between">
-                            <div class="option__desc mr-3">
+                            <div class="option__desc mr-sm-3">
                                 <div class="program_sel__checkbox" :class="{ highlighted: props.option.highlighted}"></div>
                                 <div class="option__grey">{{ props.option.uid }}</div>
                                 <div class="option__title">{{ props.option.name }} </div>
@@ -116,25 +141,33 @@
                     :custom-label="nameWithUid"
                     track-by="id"          
                     :key="progKey"
-                    :class="{error:this.error}"
+                    :class="{error:this.error, 'program-multiselect': true}"
                     :group-label="hideAllProgs ? null : 'group'"
                     :group-values="hideAllProgs ? null : 'items'"
                     :group-select="!hideAllProgs"
                     @select="progSelectHandler"
                 >
+                    <div class="multiselect__all-programs d-sm-none" slot="beforeList" @click="toggleAllMultiselectPrograms">
+                        <div class="option__desc jc_space_between">
+                            <div class="option__desc">                
+                                <div class="program_sel__checkbox program__checkbox" :class="{checked:showAllProgSelectedChkbx}"></div>
+                                <p>Выбрать все</p>
+                            </div>
+                        </div>
+                    </div>
                     <template slot="option" slot-scope="props">
                         <div class="option__desc jc_space_between">
                             <div class="option__desc">                
                                 <div class="program_sel__checkbox program__checkbox" :class="{checked:showAllProgSelectedChkbx}"></div>
-                                <div class="option__column mr-3">
-                                    <div class="option__row ml-2 opt_prog_title">
+                                <div class="option__column mr-sm-3">
+                                    <div class="option__row ml-sm-2 opt_prog_title">
                                         <p>
                                             <span class="option__prog_uid">{{ props.option.uid }}</span>                    
                                             {{ '$groupLabel' in props.option ? props.option.$groupLabel: props.option.name }}
                                         </p>                    
                                     </div>
-                                    <div class="option__grey ml-2" v-if="!('$groupLabel' in props.option)">{{ props.option.area_human }} </div>
-                                    <div class="option__grey ml-2" v-if="!('$groupLabel' in props.option)">{{ props.option.institute_human }} </div>
+                                    <div class="option__grey ml-sm-2" v-if="!('$groupLabel' in props.option)">{{ props.option.area_human }} </div>
+                                    <div class="option__grey ml-sm-2" v-if="!('$groupLabel' in props.option)">{{ props.option.institute_human }} </div>
                                 </div>
                             </div>
                             <div class="prog_url ml-6">
@@ -142,6 +175,9 @@
                             </div>
                         </div>
                     </template>
+                    <div class="multiselect__accept d-sm-none" slot="afterList">
+                        <button class="btn btn-primary" @click="addSelected">Выбрать программу</button>
+                    </div>
                     <span slot="noResult">Ничего не найдено.</span>
                     <span slot="noOptions">По условиям поиска программы отсутствуют.</span>
                 </multiselect>
@@ -192,6 +228,8 @@ export default {
         return {
             // текущий таб
             tab: "institute",
+            // список всех табов
+            tabNames: ['institute', 'area', 'program'],
             // выбранные в селекте институты
             institute: [],
             // все институты
@@ -232,6 +270,9 @@ export default {
         });
     },
     methods: {
+        toggleAllMultiselectPrograms() {
+            this.program = this.program.length ? [] : this.programs
+        },
         go(tab) {
             this.tab = tab;
         },
@@ -283,9 +324,25 @@ export default {
         },
         nameWithUid({ name, uid }) {
             return `${uid} ${name}`;
-        },    
+        }
     },
     computed: {
+        prevTab() {
+            // Вернуть имя предыдущего таба, если текущий таб первый вернуть его
+            if (this.tabNames.indexOf(this.tab) == 0) {
+                return this.tab
+            } else {
+                return this.tabNames[this.tabNames.indexOf(this.tab) - 1]
+            }
+        },
+        nextTab() {
+            // Вернуть имя следующего таба, если текущий таб последний вернуть его
+            if (this.tabNames.indexOf(this.tab) == this.tabNames.length - 1) {
+                return this.tab
+            } else {
+                return this.tabNames[this.tabNames.indexOf(this.tab) + 1]
+            }
+        },
         programsOptions() {
             // список для выбора из программ с учетом группы "Все программы" и опции "только свои программы" для РОП
             if (this.onlyMyOwnProgs) return this.userPrograms      
@@ -672,5 +729,257 @@ export default {
 }
 .program-select > .selected-programs > ul > li > a.delete:hover {
     background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMUw5IDkiIHN0cm9rZT0iI2Y1MjIyZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNOSAxTDEgOSIgc3Ryb2tlPSIjZjUyMjJkIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=");
+}
+
+@media (max-width: 575px) {
+    /* временно */
+    .program-select > .steps {
+        /* display: none; */
+    }
+
+    .program-select p {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 0;
+        color: #72808E;
+        padding: 0 12px;
+    }
+
+    .program-select .text-caption {
+        display: none;
+    }
+
+    .program-select h2 {
+        margin-bottom: 25px;
+    }
+
+    .program-select .steps {
+        margin-top: 30px;
+    }
+
+    .program-select .step:not(.active) {
+        display: none;
+    }
+
+    .program-select .prog_select__only_own {
+        margin-top: 30px;
+    }
+
+    .prog_select__only_own label {
+        font-size: 14px !important; 
+        line-height: 20px;
+    }
+
+    .custom-switch.b-custom-control-lg .custom-control-label::before {
+        top: 3px;
+        width: 32px;
+        height: 16px;
+    }
+
+    .custom-switch.b-custom-control-lg .custom-control-label::after {
+        top: calc( 0.2975rem + 2px );
+        width: 10px;
+        height: 10px;
+        left: calc( -2.7rem + 2px );
+        background: #467BE3;
+    }
+
+    .program-select > .steps > .step {
+        padding-bottom: 12px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .program-select .panels .panel {
+        padding: 22px 0 0;
+    }
+
+    .multiselect__tags {
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .multiselect__input {
+        margin: 0;
+        padding: 0;
+        width: 180px !important;
+        text-overflow: ellipsis;
+    }
+
+    .multiselect__input::placeholder {
+        text-overflow: ellipsis;
+        width: 180px;
+        overflow: hidden;
+    }
+
+    .multiselect__placeholder {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 180px;
+        margin-bottom: 0;
+    }
+
+    .program-select .panels .panel .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 24px 0 0;
+    }
+
+    .program-select .buttons .btn-primary {
+        padding: 0;
+        margin-right: 0;
+        background: none;
+        color: #467be3;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+        margin-left: auto;
+        border: none;
+    }
+
+    .multiselect__option {
+        height: auto;
+        padding: 10px 15px;
+    }
+
+    .program-select .option__desc.jc_space_between {
+        flex-direction: column;
+        align-items: start;
+        min-height: initial;
+    }
+
+    .program-select .option__desc:not(.jc_space_between) {
+        display: grid;
+        grid-template-columns: 16px auto;
+        grid-column-gap: 10px;
+        width: 100%;
+        align-items: start;
+        min-height: initial;
+    }
+
+    .program-select .option__right {
+        margin-right: 0;
+        margin-left: 26px;
+        font-size: 14px;
+        line-height: 18px;
+        color: #9da7b0;
+    }
+
+    .program-select .option__title {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        margin-left: 0;
+        line-height: 18px;
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    .program-select .option__grey + .option__title::before {
+        content: '';
+        display: inline-block;
+        width: 60px;
+    }
+
+    .program-select .option__grey {
+        margin: 0;
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        width: fit-content;
+        font-size: 14px;
+        line-height: 18px;
+        color: #9DA7B0;
+    }
+
+    .program-select .program_sel__checkbox {
+        margin: 0;
+        margin-top: 3px;
+    }
+
+    .program-select .multiselect__tag {
+        display: none;
+    }
+
+    .program-select > .steps > .step > .badge.badge-secondary {
+        display: none;
+    }
+
+    .multiselect.program-multiselect .option__column {
+        margin-left: 0;
+    }
+
+    .multiselect.program-multiselect p {
+        padding: 0;
+        color: #000;
+        font-weight: normal;
+    }
+
+    .multiselect.program-multiselect .opt_prog_title {
+        margin-bottom: 5px;
+    }
+
+    .multiselect.program-multiselect .option__grey {
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: normal;
+    }
+
+    .multiselect.program-multiselect .prog_url {
+        margin-left: 26px;
+        margin-top: 5px;
+    }
+
+    
+
+    .program-multiselect .multiselect__content-wrapper {
+        overflow: hidden;
+        height: 430px;
+        max-height: initial !important;
+    } 
+
+    .program-multiselect .multiselect__content {
+        height: 365px;
+        overflow: auto;
+    }
+    
+    .program-multiselect .multiselect__accept {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .program-multiselect .multiselect__accept .btn {
+        margin-right: none;
+        width: 100%;
+        height: 40px;
+    }
+
+    .multiselect__all-programs {
+        padding: 15px 17px;
+    }
+
+    .multiselect__all-programs .option__desc {
+        align-items: center;
+    }
+
+    .multiselect__all-programs .program_sel__checkbox {
+        margin-top: 1px;
+        position: relative;
+    }
+
+    .multiselect__all-programs .program_sel__checkbox::after {
+        position: absolute;
+        top: -2px;
+        left: 2px;
+    }
+
 }
 </style>
